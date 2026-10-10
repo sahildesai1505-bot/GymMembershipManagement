@@ -1,0 +1,951 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}
+            GymPro | Gym Management System
+        {% endblock %}
+    </title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css"
+    >
+
+    <style>
+
+        :root {
+            --primary: #7c3aed;
+            --secondary: #ec4899;
+            --cyan: #06b6d4;
+            --dark: #111827;
+            --dark-2: #1f2937;
+            --light-bg: #f5f7fb;
+            --text: #212529;
+            --muted: #6b7280;
+            --white: #ffffff;
+            --border: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--light-bg);
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* =====================================================
+           NORMAL NAVBAR
+        ===================================================== */
+
+        .main-navbar {
+            background: linear-gradient(
+                135deg,
+                var(--dark),
+                var(--dark-2)
+            );
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        .navbar-brand {
+            font-size: 1.35rem;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+        }
+
+        .navbar-brand i {
+            color: var(--secondary);
+        }
+
+        .navbar .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+            font-weight: 500;
+            margin: 0 3px;
+            transition: 0.2s ease;
+        }
+
+        .navbar .nav-link:hover {
+            color: #ffffff !important;
+            transform: translateY(-1px);
+        }
+
+
+        /* =====================================================
+           ADMIN SIDEBAR
+        ===================================================== */
+
+        .admin-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: linear-gradient(
+                180deg,
+                #111827 0%,
+                #1f2937 100%
+            );
+            color: #ffffff;
+            z-index: 1050;
+            overflow-y: auto;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.12);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-brand {
+            height: 76px;
+            display: flex;
+            align-items: center;
+            padding: 0 22px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .sidebar-brand a {
+            color: #ffffff;
+            font-size: 1.35rem;
+            font-weight: 800;
+        }
+
+        .sidebar-brand i {
+            color: var(--secondary);
+            margin-right: 8px;
+        }
+
+        .sidebar-user {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .sidebar-user-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--secondary)
+            );
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .sidebar-user-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .sidebar-user-role {
+            color: #9ca3af;
+            font-size: 0.78rem;
+            margin-top: 2px;
+        }
+
+        .sidebar-heading {
+            padding: 20px 20px 8px;
+            color: #9ca3af;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-nav {
+            padding: 0 12px 20px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #d1d5db;
+            padding: 11px 13px;
+            border-radius: 10px;
+            margin-bottom: 4px;
+            font-size: 0.91rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-link i {
+            width: 21px;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        .sidebar-link:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(3px);
+        }
+
+        .sidebar-link.active {
+            color: #ffffff;
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--secondary)
+            );
+            box-shadow: 0 5px 15px rgba(124, 58, 237, 0.25);
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            margin: 12px 5px;
+        }
+
+        .sidebar-logout {
+            color: #fca5a5;
+        }
+
+        .sidebar-logout:hover {
+            color: #ffffff;
+            background: rgba(239, 68, 68, 0.18);
+        }
+
+
+        /* =====================================================
+           ADMIN CONTENT
+        ===================================================== */
+
+        .admin-content {
+            margin-left: 260px;
+            min-height: 100vh;
+        }
+
+        .admin-topbar {
+            height: 76px;
+            background: #ffffff;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .admin-topbar-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .admin-topbar-title i {
+            color: var(--primary);
+            margin-right: 7px;
+        }
+
+        .admin-topbar-user {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #4b5563;
+        }
+
+        .admin-topbar-user i {
+            color: var(--primary);
+        }
+
+        .sidebar-toggle {
+            display: none;
+            border: 0;
+            background: var(--dark);
+            color: #ffffff;
+            width: 40px;
+            height: 40px;
+            border-radius: 9px;
+        }
+
+        .admin-page-content {
+            padding: 30px;
+        }
+
+
+        /* =====================================================
+           MOBILE SIDEBAR
+        ===================================================== */
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 1040;
+        }
+
+
+        /* =====================================================
+           GENERAL
+        ===================================================== */
+
+        .main-content {
+            min-height: calc(100vh - 70px);
+        }
+
+        .page-container {
+            padding-top: 30px;
+            padding-bottom: 40px;
+        }
+
+
+        /* =====================================================
+           CARDS
+        ===================================================== */
+
+        .card {
+            border: none;
+            border-radius: 14px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .card-header {
+            border-radius: 14px 14px 0 0 !important;
+        }
+
+
+        /* =====================================================
+           BUTTONS
+        ===================================================== */
+
+        .btn-gradient {
+            border: none;
+            color: #ffffff !important;
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--secondary)
+            );
+            border-radius: 9px;
+            font-weight: 600;
+            padding: 9px 18px;
+            transition: 0.2s ease;
+        }
+
+        .btn-gradient:hover {
+            color: #ffffff !important;
+            transform: translateY(-1px);
+            box-shadow: 0 7px 18px rgba(124, 58, 237, 0.25);
+        }
+
+
+        /* =====================================================
+           FORMS
+        ===================================================== */
+
+        .form-control,
+        .form-select {
+            border-radius: 9px;
+            border: 1px solid #dfe3e8;
+            padding: 10px 12px;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.2rem rgba(124, 58, 237, 0.12);
+        }
+
+
+        /* =====================================================
+           TABLES
+        ===================================================== */
+
+        .table {
+            vertical-align: middle;
+        }
+
+        .table thead th {
+            background: #f8f9fa;
+            color: #374151;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .table tbody td {
+            color: #4b5563;
+            font-size: 0.9rem;
+        }
+
+
+        /* =====================================================
+           BADGES
+        ===================================================== */
+
+        .badge {
+            border-radius: 20px;
+            padding: 6px 10px;
+            font-weight: 600;
+        }
+
+
+        /* =====================================================
+           ALERTS
+        ===================================================== */
+
+        .alert {
+            border: none;
+            border-radius: 10px;
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .footer {
+            background: var(--dark);
+            color: #9ca3af;
+            padding: 22px 15px;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .footer strong {
+            color: #ffffff;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 991px) {
+
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+
+            .admin-sidebar.show {
+                transform: translateX(0);
+            }
+
+            .admin-content {
+                margin-left: 0;
+            }
+
+            .sidebar-toggle {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .sidebar-overlay.show {
+                display: block;
+            }
+
+            .admin-page-content {
+                padding: 22px 18px;
+            }
+
+            .admin-topbar {
+                padding: 0 18px;
+            }
+        }
+
+        @media (max-width: 576px) {
+
+            .admin-topbar-user {
+                display: none;
+            }
+
+            .admin-page-content {
+                padding: 18px 12px;
+            }
+
+            .page-container {
+                padding-top: 20px;
+            }
+        }
+
+    </style>
+
+    {% block extra_css %}{% endblock %}
+
+</head>
+
+
+<body>
+
+
+{% if request.user.is_authenticated and request.user.role == 'ADMIN' %}
+
+    <!-- =====================================================
+         ADMIN SIDEBAR
+    ====================================================== -->
+
+    <aside class="admin-sidebar" id="adminSidebar">
+
+        <div class="sidebar-brand">
+
+            <a href="{% url 'admin_dashboard' %}">
+                <i class="fa-solid fa-dumbbell"></i>
+                GymPro
+            </a>
+
+        </div>
+
+
+        <div class="sidebar-user">
+
+            <div class="sidebar-user-icon">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+
+            <div class="sidebar-user-name">
+                {{ request.user.username }}
+            </div>
+
+            <div class="sidebar-user-role">
+                Administrator
+            </div>
+
+        </div>
+
+
+        <div class="sidebar-heading">
+            Main Menu
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="{% url 'admin_dashboard' %}" class="sidebar-link">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{% url 'members_list' %}" class="sidebar-link">
+                <i class="fa-solid fa-users"></i>
+                <span>Members</span>
+            </a>
+
+            <a href="{% url 'trainers_list' %}" class="sidebar-link">
+                <i class="fa-solid fa-user-tie"></i>
+                <span>Trainers</span>
+            </a>
+
+            <a href="{% url 'plans_list' %}" class="sidebar-link">
+                <i class="fa-solid fa-id-card"></i>
+                <span>Membership Plans</span>
+            </a>
+
+            <a href="{% url 'payments_list' %}" class="sidebar-link">
+                <i class="fa-solid fa-credit-card"></i>
+                <span>Payments</span>
+            </a>
+
+            <a href="{% url 'attendance_list' %}" class="sidebar-link">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Attendance</span>
+            </a>
+
+
+            <div class="sidebar-divider"></div>
+
+
+            <div class="sidebar-heading px-2 pt-2">
+                Gym Management
+            </div>
+
+            <a href="{% url 'workout_plans_list' %}" class="sidebar-link">
+                <i class="fa-solid fa-dumbbell"></i>
+                <span>Workout Plans</span>
+            </a>
+
+            <a href="{% url 'equipment_list' %}" class="sidebar-link">
+                <i class="fa-solid fa-toolbox"></i>
+                <span>Equipment</span>
+            </a>
+
+            <a href="{% url 'enquiries_list' %}" class="sidebar-link">
+                <i class="fa-solid fa-envelope"></i>
+                <span>Enquiries</span>
+            </a>
+
+
+            <div class="sidebar-divider"></div>
+
+
+            <a href="{% url 'change_password' %}" class="sidebar-link">
+                <i class="fa-solid fa-key"></i>
+                <span>Change Password</span>
+            </a>
+
+            <a href="{% url 'logout' %}" class="sidebar-link sidebar-logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
+    <!-- ADMIN CONTENT -->
+
+    <div class="admin-content">
+
+        <div class="admin-topbar">
+
+            <div class="d-flex align-items-center gap-3">
+
+                <button
+                    class="sidebar-toggle"
+                    id="sidebarToggle"
+                    type="button"
+                    aria-label="Open menu"
+                >
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <div class="admin-topbar-title">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    Admin Panel
+                </div>
+
+            </div>
+
+            <div class="admin-topbar-user">
+                <i class="fa-solid fa-circle-user"></i>
+                {{ request.user.username }}
+            </div>
+
+        </div>
+
+        <main class="admin-page-content">
+
+{% else %}
+
+    <!-- =====================================================
+         NORMAL NAVBAR
+    ====================================================== -->
+
+    <nav class="navbar navbar-expand-lg navbar-dark main-navbar">
+
+        <div class="container">
+
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <i class="fa-solid fa-dumbbell"></i>
+                GymPro
+            </a>
+
+
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar"
+                aria-controls="mainNavbar"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">
+                            <i class="fa-solid fa-house"></i>
+                            Home
+                        </a>
+                    </li>
+
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">
+                            <i class="fa-solid fa-circle-info"></i>
+                            About
+                        </a>
+                    </li>
+
+
+                    {% if request.user.is_authenticated %}
+
+                        {% if request.user.role == 'MEMBER' %}
+
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="{% url 'member_profile' %}"
+                                >
+                                    <i class="fa-solid fa-user"></i>
+                                    My Profile
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="{% url 'member_membership' %}"
+                                >
+                                    <i class="fa-solid fa-id-card"></i>
+                                    Membership
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="{% url 'member_attendance' %}"
+                                >
+                                    <i class="fa-solid fa-calendar-check"></i>
+                                    Attendance
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="{% url 'member_payments' %}"
+                                >
+                                    <i class="fa-solid fa-credit-card"></i>
+                                    Payments
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="{% url 'member_workout_plans' %}"
+                                >
+                                    <i class="fa-solid fa-dumbbell"></i>
+                                    Workout Plans
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="{% url 'member_feedback' %}"
+                                >
+                                    <i class="fa-solid fa-comment"></i>
+                                    Feedback
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="{% url 'change_password' %}"
+                                >
+                                    <i class="fa-solid fa-key"></i>
+                                    Password
+                                </a>
+                            </li>
+
+                        {% endif %}
+
+
+                        <li class="nav-item ms-lg-2">
+
+                            <a
+                                class="btn btn-outline-light btn-sm px-3"
+                                href="{% url 'logout' %}"
+                            >
+                                <i class="fa-solid fa-right-from-bracket"></i>
+                                Logout
+                            </a>
+
+                        </li>
+
+
+                    {% else %}
+
+                        <li class="nav-item ms-lg-2">
+
+                            <a
+                                class="btn btn-outline-light btn-sm px-3"
+                                href="{% url 'member_login' %}"
+                            >
+                                <i class="fa-solid fa-right-to-bracket"></i>
+                                Member Login
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item ms-lg-2">
+
+                            <a
+                                class="btn btn-gradient btn-sm px-3"
+                                href="{% url 'admin_login' %}"
+                            >
+                                <i class="fa-solid fa-user-shield"></i>
+                                Admin Login
+                            </a>
+
+                        </li>
+
+                    {% endif %}
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+{% endif %}
+
+
+<!-- =========================================================
+     MESSAGES
+========================================================= -->
+
+{% if messages %}
+
+    <div class="{% if request.user.is_authenticated and request.user.role == 'ADMIN' %}admin-page-content{% else %}container pt-3{% endif %}">
+
+        {% for message in messages %}
+
+            <div
+                class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm"
+                role="alert"
+            >
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"
+                ></button>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% endif %}
+
+
+<!-- =========================================================
+     ONE CONTENT BLOCK
+========================================================= -->
+
+{% block content %}{% endblock %}
+
+
+<!-- =========================================================
+     CLOSE PAGE STRUCTURE
+========================================================= -->
+
+{% if request.user.is_authenticated and request.user.role == 'ADMIN' %}
+
+        </main>
+
+    </div>
+
+{% else %}
+
+    </main>
+
+    <footer class="footer">
+
+        <div class="container">
+
+            <div>
+                <strong>GymPro</strong> — Gym Management System
+            </div>
+
+            <div class="small mt-1">
+                Built with Python, Django, Bootstrap & SQLite
+            </div>
+
+        </div>
+
+    </footer>
+
+{% endif %}
+
+
+<!-- Bootstrap JS -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+<!-- Admin Sidebar JS -->
+
+<script>
+
+    const sidebarToggle =
+        document.getElementById("sidebarToggle");
+
+    const adminSidebar =
+        document.getElementById("adminSidebar");
+
+    const sidebarOverlay =
+        document.getElementById("sidebarOverlay");
+
+
+    if (sidebarToggle && adminSidebar && sidebarOverlay) {
+
+        sidebarToggle.addEventListener("click", function () {
+
+            adminSidebar.classList.toggle("show");
+
+            sidebarOverlay.classList.toggle("show");
+
+        });
+
+
+        sidebarOverlay.addEventListener("click", function () {
+
+            adminSidebar.classList.remove("show");
+
+            sidebarOverlay.classList.remove("show");
+
+        });
+
+    }
+
+</script>
+
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

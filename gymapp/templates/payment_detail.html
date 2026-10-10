@@ -1,0 +1,399 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h1 class="fw-bold">💳 Payment Details</h1>
+
+            <p class="text-muted mb-0">
+                Complete payment information and receipt
+            </p>
+        </div>
+
+        <div>
+            <a href="{% url 'payments_list' %}"
+               class="btn btn-secondary">
+                ← Back to Payments
+            </a>
+
+            <button onclick="window.print()"
+                    class="btn btn-primary">
+                🖨 Print Receipt
+            </button>
+        </div>
+
+    </div>
+
+
+    <!-- PAYMENT RECEIPT -->
+
+    <div class="card shadow-sm">
+
+        <!-- RECEIPT HEADER -->
+
+        <div class="card-header bg-dark text-white">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+                    <h3 class="mb-0">
+                        🏋️ My Gym
+                    </h3>
+
+                    <small>
+                        Payment Receipt
+                    </small>
+                </div>
+
+                <div class="text-end">
+                    <strong>
+                        Payment #{{ payment.id }}
+                    </strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RECEIPT BODY -->
+
+        <div class="card-body">
+
+            <!-- PAYMENT STATUS -->
+
+            <div class="mb-4">
+
+                <h5 class="fw-bold">
+                    Payment Status
+                </h5>
+
+                {% if payment.status == 'PAID' %}
+
+                    <span class="badge bg-success fs-6">
+                        ✓ PAID
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-warning text-dark fs-6">
+                        ⏳ PENDING
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <hr>
+
+
+            <!-- MEMBER INFORMATION -->
+
+            <h5 class="fw-bold mb-3">
+                👤 Member Information
+            </h5>
+
+            <div class="row mb-4">
+
+                <div class="col-md-6 mb-3">
+
+                    <strong>Member Name</strong>
+
+                    <div class="mt-1">
+                        {{ payment.member.full_name }}
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <strong>Mobile</strong>
+
+                    <div class="mt-1">
+                        {{ payment.member.mobile }}
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <strong>Username</strong>
+
+                    <div class="mt-1">
+                        {{ payment.member.user.username }}
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <strong>Join Date</strong>
+
+                    <div class="mt-1">
+                        {{ payment.member.join_date|date:"d M Y" }}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <hr>
+
+
+            <!-- PAYMENT INFORMATION -->
+
+            <h5 class="fw-bold mb-3">
+                💳 Payment Information
+            </h5>
+
+            <div class="row mb-4">
+
+                <div class="col-md-6 mb-3">
+
+                    <strong>Membership Plan</strong>
+
+                    <div class="mt-1">
+
+                        {% if payment.plan %}
+
+                            {{ payment.plan.name }}
+
+                        {% else %}
+
+                            No Plan
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <strong>Amount</strong>
+
+                    <div class="mt-1 text-success fw-bold fs-4">
+
+                        ₹{{ payment.amount }}
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <strong>Payment Date</strong>
+
+                    <div class="mt-1">
+
+                        {{ payment.payment_date|date:"d M Y" }}
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <strong>Payment Mode</strong>
+
+                    <div class="mt-1">
+
+                        {% if payment.mode == 'CASH' %}
+
+                            💵 Cash
+
+                        {% elif payment.mode == 'ONLINE' %}
+
+                            💳 Online
+
+                        {% else %}
+
+                            {{ payment.mode }}
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <hr>
+
+
+            <!-- MEMBERSHIP PERIOD -->
+
+            <h5 class="fw-bold mb-3">
+                📅 Membership Period
+            </h5>
+
+            <div class="row mb-4">
+
+                <div class="col-md-6">
+
+                    <strong>Membership Start</strong>
+
+                    <div class="mt-1">
+
+                        {% if payment.member.membership_start %}
+
+                            {{ payment.member.membership_start|date:"d M Y" }}
+
+                        {% else %}
+
+                            Not Available
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <strong>Membership End</strong>
+
+                    <div class="mt-1">
+
+                        {% if payment.member.membership_end %}
+
+                            {{ payment.member.membership_end|date:"d M Y" }}
+
+                        {% else %}
+
+                            Not Available
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <hr>
+
+
+            <!-- NOTES -->
+
+            <h5 class="fw-bold mb-3">
+                📝 Notes
+            </h5>
+
+            <div class="bg-light p-3 rounded mb-4">
+
+                {% if payment.notes %}
+
+                    {{ payment.notes }}
+
+                {% else %}
+
+                    <span class="text-muted">
+                        No notes added.
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- TOTAL -->
+
+            <div class="row justify-content-end">
+
+                <div class="col-md-5">
+
+                    <div class="card bg-light">
+
+                        <div class="card-body">
+
+                            <div class="d-flex justify-content-between">
+
+                                <strong>
+                                    Total Amount
+                                </strong>
+
+                                <strong class="text-success fs-4">
+
+                                    ₹{{ payment.amount }}
+
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FOOTER -->
+
+        <div class="card-footer text-center text-muted">
+
+            <small>
+                Thank you for choosing My Gym 💪
+            </small>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- PRINT CSS -->
+
+<style>
+
+@media print {
+
+    body {
+        background: white !important;
+    }
+
+    nav,
+    .navbar,
+    button,
+    .btn,
+    footer {
+        display: none !important;
+    }
+
+    .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+    }
+
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+
+}
+
+</style>
+
+{% endblock %}

@@ -1,0 +1,294 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h1 class="fw-bold">
+                🏋️ Equipment Details
+            </h1>
+
+            <p class="text-muted mb-0">
+                Complete equipment information
+            </p>
+        </div>
+
+        <a
+            href="{% url 'equipment_list' %}"
+            class="btn btn-secondary"
+        >
+            ← Back to Equipment
+        </a>
+
+    </div>
+
+
+    <!-- MESSAGES -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+                </button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <div class="row g-4">
+
+        <!-- ========================================================
+             MAIN INFORMATION
+        ========================================================= -->
+
+        <div class="col-md-8">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-dark text-white">
+
+                    <h4 class="mb-0">
+                        🏋️ {{ equipment.name }}
+                    </h4>
+
+                </div>
+
+
+                <div class="card-body p-4">
+
+                    <div class="row">
+
+                        <!-- NAME -->
+
+                        <div class="col-md-6 mb-4">
+
+                            <label class="text-muted">
+                                Equipment Name
+                            </label>
+
+                            <h5 class="fw-bold">
+                                {{ equipment.name }}
+                            </h5>
+
+                        </div>
+
+
+                        <!-- UNITS -->
+
+                        <div class="col-md-6 mb-4">
+
+                            <label class="text-muted">
+                                Number of Units
+                            </label>
+
+                            <h5 class="fw-bold">
+                                {{ equipment.units }}
+                            </h5>
+
+                        </div>
+
+
+                        <!-- PRICE -->
+
+                        <div class="col-md-6 mb-4">
+
+                            <label class="text-muted">
+                                Purchase Price
+                            </label>
+
+                            <h5 class="fw-bold text-primary">
+                                ₹{{ equipment.price }}
+                            </h5>
+
+                        </div>
+
+
+                        <!-- PURCHASE DATE -->
+
+                        <div class="col-md-6 mb-4">
+
+                            <label class="text-muted">
+                                Purchase Date
+                            </label>
+
+                            <h5 class="fw-bold">
+
+                                {% if equipment.purchase_date %}
+
+                                    {{ equipment.purchase_date|date:"d M Y" }}
+
+                                {% else %}
+
+                                    Not Available
+
+                                {% endif %}
+
+                            </h5>
+
+                        </div>
+
+
+                        <!-- STATUS -->
+
+                        <div class="col-md-12">
+
+                            <label class="text-muted">
+                                Current Status
+                            </label>
+
+                            <div class="mt-2">
+
+                                {% if equipment.is_active %}
+
+                                    <span class="badge bg-success status-badge">
+                                        🟢 Active
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-danger status-badge">
+                                        🔴 Inactive
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================================
+             ACTIONS
+        ========================================================= -->
+
+        <div class="col-md-4">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-dark text-white">
+
+                    <h5 class="mb-0">
+                        ⚙️ Actions
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <a
+                        href="{% url 'edit_equipment' equipment.id %}"
+                        class="btn btn-warning w-100 mb-3"
+                    >
+                        ✏️ Edit Equipment
+                    </a>
+
+
+                    <!-- ACTIVATE / DEACTIVATE -->
+
+                    <form
+                        method="POST"
+                        action="{% url 'toggle_equipment' equipment.id %}"
+                    >
+
+                        {% csrf_token %}
+
+                        {% if equipment.is_active %}
+
+                            <button
+                                type="submit"
+                                class="btn btn-outline-danger w-100 mb-3"
+                            >
+                                🔴 Deactivate Equipment
+                            </button>
+
+                        {% else %}
+
+                            <button
+                                type="submit"
+                                class="btn btn-outline-success w-100 mb-3"
+                            >
+                                🟢 Activate Equipment
+                            </button>
+
+                        {% endif %}
+
+                    </form>
+
+
+                    <!-- DELETE -->
+
+                    <form
+                        method="POST"
+                        action="{% url 'delete_equipment' equipment.id %}"
+                        onsubmit="return confirm('Are you sure you want to permanently delete this equipment?');"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="btn btn-danger w-100"
+                        >
+                            🗑️ Delete Equipment
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+
+.card {
+    border-radius: 15px;
+}
+
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+}
+
+.btn {
+    border-radius: 8px;
+}
+
+.status-badge {
+    padding: 9px 14px;
+    font-size: 0.9rem;
+}
+
+</style>
+
+{% endblock %}

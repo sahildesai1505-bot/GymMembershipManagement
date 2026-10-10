@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    My Profile
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <!-- HEADER -->
+    <div class="d-flex gap-2">
+
+    <a
+        href="{% url 'edit_member_profile' %}"
+        class="btn btn-primary"
+    >
+        ✏️ Edit Profile
+    </a>
+
+    <a
+        href="{% url 'change_member_password' %}"
+        class="btn btn-dark"
+    >
+        🔐 Change Password
+    </a>
+
+</div>
+
+        <a href="{% url 'member_dashboard' %}"
+           class="btn btn-dark">
+            ← Dashboard
+        </a>
+
+    </div>
+
+
+    {% if member %}
+
+    <!-- PROFILE CARD -->
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-header bg-dark text-white">
+            <strong>Personal Information</strong>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <!-- FULL NAME -->
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        Full Name
+                    </label>
+
+                    <h5>
+                        {{ member.full_name|default:"Not available" }}
+                    </h5>
+
+                </div>
+
+
+                <!-- USERNAME -->
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        Username
+                    </label>
+
+                    <h5>
+                        @{{ member.user.username }}
+                    </h5>
+
+                </div>
+
+
+                <!-- MOBILE -->
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        Mobile Number
+                    </label>
+
+                    <h5>
+                        {{ member.mobile|default:"Not available" }}
+                    </h5>
+
+                </div>
+
+
+                <!-- AGE -->
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        Age
+                    </label>
+
+                    <h5>
+                        {{ member.age|default:"Not available" }}
+                    </h5>
+
+                </div>
+
+
+                <!-- GENDER -->
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        Gender
+                    </label>
+
+                    <h5>
+                        {{ member.gender|default:"Not available" }}
+                    </h5>
+
+                </div>
+
+
+                <!-- JOIN DATE -->
+                <div class="col-md-6">
+
+                    <label class="text-muted">
+                        Member Since
+                    </label>
+
+                    <h5>
+                        {{ member.join_date|default:"Not available" }}
+                    </h5>
+
+                </div>
+
+
+                <!-- ADDRESS -->
+                <div class="col-12">
+
+                    <label class="text-muted">
+                        Address
+                    </label>
+
+                    <h5>
+                        {{ member.address|default:"Not available" }}
+                    </h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- MEMBERSHIP INFORMATION -->
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-header bg-dark text-white">
+            <strong>Membership Information</strong>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <!-- PLAN -->
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        Membership Plan
+                    </label>
+
+                    <h5>
+
+                        {% if member.plan %}
+                            {{ member.plan.name }}
+                        {% else %}
+                            No Plan Assigned
+                        {% endif %}
+
+                    </h5>
+
+                </div>
+
+
+                <!-- START DATE -->
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        Start Date
+                    </label>
+
+                    <h5>
+                        {{ member.membership_start|default:"Not available" }}
+                    </h5>
+
+                </div>
+
+
+                <!-- END DATE -->
+                <div class="col-md-4">
+
+                    <label class="text-muted">
+                        End Date
+                    </label>
+
+                    <h5>
+                        {{ member.membership_end|default:"Not available" }}
+                    </h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TRAINER INFORMATION -->
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-header bg-dark text-white">
+            <strong>Trainer Information</strong>
+        </div>
+
+        <div class="card-body">
+
+            {% if member.trainer %}
+
+                <h4>
+                    {{ member.trainer.name }}
+                </h4>
+
+                {% if member.trainer.specialization %}
+
+                    <p class="text-muted mb-0">
+                        {{ member.trainer.specialization }}
+                    </p>
+
+                {% endif %}
+
+            {% else %}
+
+                <p class="text-muted mb-0">
+                    No trainer assigned.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    {% else %}
+
+        <div class="alert alert-warning">
+            Your member profile has not been created yet.
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

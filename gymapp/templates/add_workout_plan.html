@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Add Workout Plan
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2>
+                Add Workout Plan 💪
+            </h2>
+
+            <p class="text-muted mb-0">
+                Assign a workout plan to a gym member.
+            </p>
+
+        </div>
+
+        <a
+            href="{% url 'workout_plans_list' %}"
+            class="btn btn-dark"
+        >
+            ← Back
+        </a>
+
+    </div>
+
+
+    <!-- FORM -->
+
+    <div class="row">
+
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-dark text-white">
+
+                    <h5 class="mb-0">
+                        Workout Plan Details
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+
+                        <!-- MEMBER -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Select Member
+                            </label>
+
+                            <select
+                                name="member"
+                                class="form-select"
+                                required
+                            >
+
+                                <option value="">
+                                    -- Select Member --
+                                </option>
+
+                                {% for member in members %}
+
+                                    <option
+                                        value="{{ member.id }}"
+                                        {% if form_data.member == member.id|stringformat:"s" %}
+                                            selected
+                                        {% endif %}
+                                    >
+
+                                        {{ member.full_name }}
+
+                                        {% if member.user %}
+                                            ({{ member.user.username }})
+                                        {% endif %}
+
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- TITLE -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Workout Plan Title
+                            </label>
+
+                            <input
+                                type="text"
+                                name="title"
+                                class="form-control"
+                                placeholder="Example: Beginner Strength Training"
+                                value="{{ form_data.title|default:'' }}"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- DESCRIPTION -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Description
+                            </label>
+
+                            <textarea
+                                name="description"
+                                class="form-control"
+                                rows="5"
+                                placeholder="Enter workout instructions, exercises, sets, reps, etc."
+                            >{{ form_data.description|default:'' }}</textarea>
+
+                        </div>
+
+
+                        <!-- DURATION -->
+
+                        <div class="mb-4">
+
+                            <label class="form-label">
+                                Duration (Weeks)
+                            </label>
+
+                            <input
+                                type="number"
+                                name="duration_weeks"
+                                class="form-control"
+                                min="1"
+                                placeholder="Example: 8"
+                                value="{{ form_data.duration_weeks|default:'' }}"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- BUTTONS -->
+
+                        <div class="d-flex gap-2">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                <i class="fas fa-plus"></i>
+                                Assign Workout Plan
+                            </button>
+
+                            <a
+                                href="{% url 'workout_plans_list' %}"
+                                class="btn btn-secondary"
+                            >
+                                Cancel
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

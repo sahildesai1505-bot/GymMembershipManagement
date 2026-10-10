@@ -1,0 +1,591 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Payment - My Gym</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            background: #212529 !important;
+        }
+
+        .page-container {
+            max-width: 1100px;
+            margin: 45px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #212529;
+        }
+
+        .page-subtitle {
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .payment-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            margin-top: 35px;
+        }
+
+        .card-header-custom {
+            background: #212529;
+            color: white;
+            padding: 14px 18px;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .card-body-custom {
+            padding: 25px;
+        }
+
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .form-control,
+        .form-select {
+            min-height: 42px;
+            border-radius: 6px;
+        }
+
+        textarea.form-control {
+            min-height: 110px;
+        }
+
+        .btn-update {
+            background: #198754;
+            border: none;
+            color: white;
+            padding: 10px 22px;
+            border-radius: 6px;
+        }
+
+        .btn-update:hover {
+            background: #157347;
+            color: white;
+        }
+
+        .btn-back {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        .btn-back:hover {
+            background: #5c636a;
+            color: white;
+        }
+
+        .required {
+            color: red;
+        }
+
+        .alert {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ============================================================
+     NAVBAR
+============================================================ -->
+
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid px-4">
+
+        <a
+            class="navbar-brand fw-bold"
+            href="{% url 'admin_dashboard' %}"
+        >
+            🏋️ My Gym
+        </a>
+
+        <div class="navbar-nav ms-auto">
+
+            <a
+                class="nav-link"
+                href="{% url 'admin_dashboard' %}"
+            >
+                Dashboard
+            </a>
+
+            <a
+                class="nav-link"
+                href="{% url 'members_list' %}"
+            >
+                Members
+            </a>
+
+            <a
+                class="nav-link"
+                href="{% url 'plans_list' %}"
+            >
+                Plans
+            </a>
+
+            <a
+                class="nav-link"
+                href="{% url 'trainers_list' %}"
+            >
+                Trainers
+            </a>
+
+            <a
+                class="nav-link active"
+                href="{% url 'payments_list' %}"
+            >
+                Payments
+            </a>
+
+            <a
+                class="nav-link"
+                href="{% url 'attendance_list' %}"
+            >
+                Attendance
+            </a>
+
+            <a
+                class="nav-link"
+                href="{% url 'equipment_list' %}"
+            >
+                Equipment
+            </a>
+
+            <a
+                class="nav-link"
+                href="{% url 'enquiries_list' %}"
+            >
+                Enquiries
+            </a>
+
+            <a
+                class="nav-link"
+                href="{% url 'workout_plans_list' %}"
+            >
+                Workout Plans
+            </a>
+
+            <a
+                class="nav-link"
+                href="{% url 'feedback_list' %}"
+            >
+                Feedback
+            </a>
+
+            <a
+                class="nav-link"
+                href="{% url 'logout' %}"
+            >
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+</nav>
+
+
+<!-- ============================================================
+     MAIN CONTENT
+============================================================ -->
+
+<div class="page-container">
+
+    <!-- TITLE -->
+
+    <div class="d-flex justify-content-between align-items-center">
+
+        <div>
+            <h1 class="page-title">
+                ✏️ Edit Payment
+            </h1>
+
+            <p class="page-subtitle">
+                Update payment information
+            </p>
+        </div>
+
+        <a
+            href="{% url 'payments_list' %}"
+            class="btn-back"
+        >
+            ← Back to Payments
+        </a>
+
+    </div>
+
+
+    <!-- ========================================================
+         DJANGO MESSAGES
+    ========================================================= -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div
+                class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show mt-4"
+                role="alert"
+            >
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                ></button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <!-- ========================================================
+         PAYMENT FORM
+    ========================================================= -->
+
+    <div class="payment-card">
+
+        <div class="card-header-custom">
+            💳 Payment Information
+        </div>
+
+
+        <div class="card-body-custom">
+
+            <form
+                method="POST"
+                action="{% url 'edit_payment' payment.id %}"
+            >
+
+                {% csrf_token %}
+
+
+                <!-- ==================================================
+                     MEMBER
+                =================================================== -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="member"
+                        class="form-label"
+                    >
+                        Member
+                        <span class="required">*</span>
+                    </label>
+
+                    <select
+                        id="member"
+                        name="member"
+                        class="form-select"
+                        required
+                    >
+
+                        {% for member in members %}
+
+                            <option
+                                value="{{ member.id }}"
+                                {% if member.id == payment.member.id %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ member.full_name }}
+                            </option>
+
+                        {% empty %}
+
+                            <option value="">
+                                No members available
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- ==================================================
+                     MEMBERSHIP PLAN
+                =================================================== -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="plan"
+                        class="form-label"
+                    >
+                        Membership Plan
+                    </label>
+
+                    <select
+                        id="plan"
+                        name="plan"
+                        class="form-select"
+                    >
+
+                        <option value="">
+                            -- No Plan --
+                        </option>
+
+                        {% for plan in plans %}
+
+                            <option
+                                value="{{ plan.id }}"
+                                {% if payment.plan and plan.id == payment.plan.id %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ plan.name }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- ==================================================
+                     AMOUNT
+                =================================================== -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="amount"
+                        class="form-label"
+                    >
+                        Amount
+                        <span class="required">*</span>
+                    </label>
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">
+                            ₹
+                        </span>
+
+                        <input
+                            type="number"
+                            id="amount"
+                            name="amount"
+                            class="form-control"
+                            step="0.01"
+                            min="0"
+                            value="{{ payment.amount }}"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==================================================
+                     PAYMENT DATE
+                =================================================== -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="payment_date"
+                        class="form-label"
+                    >
+                        Payment Date
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="date"
+                        id="payment_date"
+                        name="payment_date"
+                        class="form-control"
+                        value="{{ payment.payment_date|date:'Y-m-d' }}"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- ==================================================
+                     PAYMENT MODE
+                =================================================== -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="mode"
+                        class="form-label"
+                    >
+                        Payment Mode
+                        <span class="required">*</span>
+                    </label>
+
+                    <select
+                        id="mode"
+                        name="mode"
+                        class="form-select"
+                        required
+                    >
+
+                        <option
+                            value="CASH"
+                            {% if payment.mode == 'CASH' %}
+                                selected
+                            {% endif %}
+                        >
+                            Cash
+                        </option>
+
+                        <option
+                            value="ONLINE"
+                            {% if payment.mode == 'ONLINE' %}
+                                selected
+                            {% endif %}
+                        >
+                            Online
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- ==================================================
+                     PAYMENT STATUS
+                =================================================== -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="status"
+                        class="form-label"
+                    >
+                        Payment Status
+                        <span class="required">*</span>
+                    </label>
+
+                    <select
+                        id="status"
+                        name="status"
+                        class="form-select"
+                        required
+                    >
+
+                        <option
+                            value="PAID"
+                            {% if payment.status == 'PAID' %}
+                                selected
+                            {% endif %}
+                        >
+                            Paid
+                        </option>
+
+                        <option
+                            value="PENDING"
+                            {% if payment.status == 'PENDING' %}
+                                selected
+                            {% endif %}
+                        >
+                            Pending
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- ==================================================
+                     NOTES
+                =================================================== -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="notes"
+                        class="form-label"
+                    >
+                        Notes
+                    </label>
+
+                    <textarea
+                        id="notes"
+                        name="notes"
+                        class="form-control"
+                        placeholder="Enter any additional payment notes..."
+                    >{{ payment.notes|default:'' }}</textarea>
+
+                </div>
+
+
+                <!-- ==================================================
+                     BUTTONS
+                =================================================== -->
+
+                <div class="d-flex gap-2 mt-4">
+
+                    <button
+                        type="submit"
+                        class="btn btn-update"
+                    >
+                        💾 Update Payment
+                    </button>
+
+                    <a
+                        href="{% url 'payments_list' %}"
+                        class="btn btn-secondary"
+                    >
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+></script>
+
+</body>
+</html>

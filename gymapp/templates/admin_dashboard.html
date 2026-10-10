@@ -1,0 +1,1837 @@
+{% extends 'base.html' %}
+
+{% block title %}GymPro | Admin Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+```
+<!-- =========================================================
+     DASHBOARD HEADER
+========================================================== -->
+
+<div class="dashboard-header mb-4">
+
+    <div>
+
+        <span class="dashboard-label">
+            GYMPRO ADMIN PANEL
+        </span>
+
+        <h1 class="fw-bold mb-1">
+            👋 Admin Dashboard
+        </h1>
+
+        <p class="text-muted mb-0">
+            Welcome back, {{ request.user.username }}.
+            Here's what's happening in your gym today.
+        </p>
+
+    </div>
+
+    <div class="dashboard-header-actions">
+
+        <a
+            href="{% url 'add_member' %}"
+            class="btn btn-gradient"
+        >
+            <i class="fas fa-user-plus me-2"></i>
+            Add Member
+        </a>
+
+        <a
+            href="{% url 'logout' %}"
+            class="btn btn-outline-danger"
+        >
+            <i class="fas fa-right-from-bracket me-1"></i>
+            Logout
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     MESSAGES
+========================================================== -->
+
+{% if messages %}
+
+    {% for message in messages %}
+
+        <div
+            class="alert alert-{{ message.tags }} alert-dismissible fade show"
+            role="alert"
+        >
+
+            <i class="fas fa-circle-info me-2"></i>
+
+            {{ message }}
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+            ></button>
+
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+
+
+<!-- =========================================================
+     MEMBER & GYM OVERVIEW
+========================================================== -->
+
+<div class="section-title">
+
+    <div>
+        <h5>
+            <i class="fas fa-chart-pie me-2"></i>
+            Gym Overview
+        </h5>
+
+        <p>
+            Current membership and facility statistics
+        </p>
+    </div>
+
+</div>
+
+
+<div class="row g-4 mb-5">
+
+
+    <!-- TOTAL MEMBERS -->
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="stat-card stat-purple">
+
+            <div class="stat-card-top">
+
+                <div>
+
+                    <span class="stat-label">
+                        Total Members
+                    </span>
+
+                    <h2>
+                        {{ total_members }}
+                    </h2>
+
+                </div>
+
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+
+            </div>
+
+            <a
+                href="{% url 'members_list' %}"
+                class="stat-link"
+            >
+                View Members
+                <i class="fas fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACTIVE MEMBERS -->
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="stat-card stat-green">
+
+            <div class="stat-card-top">
+
+                <div>
+
+                    <span class="stat-label">
+                        Active Members
+                    </span>
+
+                    <h2>
+                        {{ active_members }}
+                    </h2>
+
+                </div>
+
+                <div class="stat-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+
+            </div>
+
+            <span class="stat-description">
+                Currently active memberships
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- TRAINERS -->
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="stat-card stat-cyan">
+
+            <div class="stat-card-top">
+
+                <div>
+
+                    <span class="stat-label">
+                        Trainers
+                    </span>
+
+                    <h2>
+                        {{ total_trainers }}
+                    </h2>
+
+                </div>
+
+                <div class="stat-icon">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+
+            </div>
+
+            <a
+                href="{% url 'trainers_list' %}"
+                class="stat-link"
+            >
+                Manage Trainers
+                <i class="fas fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- MEMBERSHIP PLANS -->
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="stat-card stat-pink">
+
+            <div class="stat-card-top">
+
+                <div>
+
+                    <span class="stat-label">
+                        Membership Plans
+                    </span>
+
+                    <h2>
+                        {{ total_plans }}
+                    </h2>
+
+                </div>
+
+                <div class="stat-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+
+            </div>
+
+            <a
+                href="{% url 'plans_list' %}"
+                class="stat-link"
+            >
+                Manage Plans
+                <i class="fas fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================================================
+     FINANCE & ACTIVITY
+========================================================== -->
+
+<div class="section-title">
+
+    <div>
+
+        <h5>
+            <i class="fas fa-chart-line me-2"></i>
+            Finance & Activity
+        </h5>
+
+        <p>
+            Payments, attendance and operational statistics
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="row g-4 mb-5">
+
+
+    <!-- TOTAL REVENUE -->
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="stat-card stat-revenue">
+
+            <div class="stat-card-top">
+
+                <div>
+
+                    <span class="stat-label">
+                        Total Revenue
+                    </span>
+
+                    <h2>
+                        ₹{{ total_revenue }}
+                    </h2>
+
+                </div>
+
+                <div class="stat-icon">
+                    <i class="fas fa-indian-rupee-sign"></i>
+                </div>
+
+            </div>
+
+            <a
+                href="{% url 'payments_list' %}"
+                class="stat-link"
+            >
+                View Payments
+                <i class="fas fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- PENDING PAYMENTS -->
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="stat-card stat-warning">
+
+            <div class="stat-card-top">
+
+                <div>
+
+                    <span class="stat-label">
+                        Pending Payments
+                    </span>
+
+                    <h2>
+                        ₹{{ pending_payments }}
+                    </h2>
+
+                </div>
+
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+
+            </div>
+
+            <span class="stat-description">
+                Amount currently pending
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- TODAY ATTENDANCE -->
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="stat-card stat-blue">
+
+            <div class="stat-card-top">
+
+                <div>
+
+                    <span class="stat-label">
+                        Today's Attendance
+                    </span>
+
+                    <h2>
+                        {{ today_attendance }}
+                    </h2>
+
+                </div>
+
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+
+            </div>
+
+            <a
+                href="{% url 'attendance_list' %}"
+                class="stat-link"
+            >
+                View Attendance
+                <i class="fas fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- NEW ENQUIRIES -->
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="stat-card stat-danger">
+
+            <div class="stat-card-top">
+
+                <div>
+
+                    <span class="stat-label">
+                        New Enquiries
+                    </span>
+
+                    <h2>
+                        {{ new_enquiries }}
+                    </h2>
+
+                </div>
+
+                <div class="stat-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+
+            </div>
+
+            <a
+                href="{% url 'enquiries_list' %}"
+                class="stat-link"
+            >
+                View Enquiries
+                <i class="fas fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================================================
+     OTHER STATISTICS
+========================================================== -->
+
+<div class="row g-4 mb-5">
+
+
+    <!-- WORKOUT PLANS -->
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="mini-stat-card">
+
+            <div class="mini-stat-icon">
+                <i class="fas fa-dumbbell"></i>
+            </div>
+
+            <div>
+
+                <span>
+                    Workout Plans
+                </span>
+
+                <strong>
+                    {{ total_workout_plans|default:"0" }}
+                </strong>
+
+            </div>
+
+            <a href="{% url 'workout_plans_list' %}">
+                <i class="fas fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- EQUIPMENT -->
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="mini-stat-card">
+
+            <div class="mini-stat-icon">
+                <i class="fas fa-gears"></i>
+            </div>
+
+            <div>
+
+                <span>
+                    Equipment
+                </span>
+
+                <strong>
+                    {{ total_equipment }}
+                </strong>
+
+            </div>
+
+            <a href="{% url 'equipment_list' %}">
+                <i class="fas fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- TOTAL PAYMENTS -->
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="mini-stat-card">
+
+            <div class="mini-stat-icon">
+                <i class="fas fa-credit-card"></i>
+            </div>
+
+            <div>
+
+                <span>
+                    Total Payments
+                </span>
+
+                <strong>
+                    {{ total_payments }}
+                </strong>
+
+            </div>
+
+            <a href="{% url 'payments_list' %}">
+                <i class="fas fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- TOTAL ENQUIRIES -->
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="mini-stat-card">
+
+            <div class="mini-stat-icon">
+                <i class="fas fa-comments"></i>
+            </div>
+
+            <div>
+
+                <span>
+                    Total Enquiries
+                </span>
+
+                <strong>
+                    {{ total_enquiries }}
+                </strong>
+
+            </div>
+
+            <a href="{% url 'enquiries_list' %}">
+                <i class="fas fa-arrow-right"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================================================
+     QUICK ACTIONS
+========================================================== -->
+
+<div class="dashboard-section-card mb-5">
+
+    <div class="section-card-header">
+
+        <div>
+
+            <h5>
+                <i class="fas fa-bolt me-2"></i>
+                Quick Actions
+            </h5>
+
+            <p>
+                Frequently used gym management actions
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="section-card-body">
+
+        <div class="row g-3">
+
+
+            <!-- ADD MEMBER -->
+
+            <div class="col-xl-3 col-lg-4 col-md-6">
+
+                <a
+                    href="{% url 'add_member' %}"
+                    class="quick-action"
+                >
+
+                    <div class="quick-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+
+                    <div>
+                        <strong>Add Member</strong>
+                        <small>Create a new member account</small>
+                    </div>
+
+                    <i class="fas fa-arrow-right quick-arrow"></i>
+
+                </a>
+
+            </div>
+
+
+            <!-- ADD PLAN -->
+
+            <div class="col-xl-3 col-lg-4 col-md-6">
+
+                <a
+                    href="{% url 'add_plan' %}"
+                    class="quick-action"
+                >
+
+                    <div class="quick-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+
+                    <div>
+                        <strong>Add Plan</strong>
+                        <small>Create a membership plan</small>
+                    </div>
+
+                    <i class="fas fa-arrow-right quick-arrow"></i>
+
+                </a>
+
+            </div>
+
+
+            <!-- ADD PAYMENT -->
+
+            <div class="col-xl-3 col-lg-4 col-md-6">
+
+                <a
+                    href="{% url 'add_payment' %}"
+                    class="quick-action"
+                >
+
+                    <div class="quick-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+
+                    <div>
+                        <strong>Add Payment</strong>
+                        <small>Record a member payment</small>
+                    </div>
+
+                    <i class="fas fa-arrow-right quick-arrow"></i>
+
+                </a>
+
+            </div>
+
+
+            <!-- ATTENDANCE -->
+
+            <div class="col-xl-3 col-lg-4 col-md-6">
+
+                <a
+                    href="{% url 'mark_attendance' %}"
+                    class="quick-action"
+                >
+
+                    <div class="quick-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+
+                    <div>
+                        <strong>Attendance</strong>
+                        <small>Mark today's attendance</small>
+                    </div>
+
+                    <i class="fas fa-arrow-right quick-arrow"></i>
+
+                </a>
+
+            </div>
+
+
+            <!-- EQUIPMENT -->
+
+            <div class="col-xl-3 col-lg-4 col-md-6">
+
+                <a
+                    href="{% url 'add_equipment' %}"
+                    class="quick-action"
+                >
+
+                    <div class="quick-icon">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+
+                    <div>
+                        <strong>Equipment</strong>
+                        <small>Add gym equipment</small>
+                    </div>
+
+                    <i class="fas fa-arrow-right quick-arrow"></i>
+
+                </a>
+
+            </div>
+
+
+            <!-- ADD TRAINER -->
+
+            <div class="col-xl-3 col-lg-4 col-md-6">
+
+                <a
+                    href="{% url 'add_trainer' %}"
+                    class="quick-action"
+                >
+
+                    <div class="quick-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+
+                    <div>
+                        <strong>Add Trainer</strong>
+                        <small>Register a new trainer</small>
+                    </div>
+
+                    <i class="fas fa-arrow-right quick-arrow"></i>
+
+                </a>
+
+            </div>
+
+
+            <!-- WORKOUT PLANS -->
+
+            <div class="col-xl-3 col-lg-4 col-md-6">
+
+                <a
+                    href="{% url 'workout_plans_list' %}"
+                    class="quick-action"
+                >
+
+                    <div class="quick-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+
+                    <div>
+                        <strong>Workout Plans</strong>
+                        <small>Manage member workouts</small>
+                    </div>
+
+                    <i class="fas fa-arrow-right quick-arrow"></i>
+
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     RECENT ACTIVITY
+========================================================== -->
+
+<div class="section-title">
+
+    <div>
+
+        <h5>
+            <i class="fas fa-clock-rotate-left me-2"></i>
+            Recent Activity
+        </h5>
+
+        <p>
+            Latest activity across your gym
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="row g-4">
+
+
+    <!-- =====================================================
+         RECENT PAYMENTS
+    ====================================================== -->
+
+    <div class="col-lg-6">
+
+        <div class="dashboard-section-card h-100">
+
+            <div class="section-card-header">
+
+                <div>
+
+                    <h5>
+                        💰 Recent Payments
+                    </h5>
+
+                    <p>
+                        Latest payment transactions
+                    </p>
+
+                </div>
+
+                <a
+                    href="{% url 'payments_list' %}"
+                    class="view-all"
+                >
+                    View All
+                    <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+
+            </div>
+
+
+            <div class="section-card-body p-0">
+
+                {% if recent_payments %}
+
+                    <div class="table-responsive">
+
+                        <table class="table dashboard-table mb-0">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Member</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                {% for payment in recent_payments %}
+
+                                    <tr>
+
+                                        <td>
+                                            <strong>
+                                                {{ payment.member.full_name }}
+                                            </strong>
+                                        </td>
+
+                                        <td>
+                                            ₹{{ payment.amount }}
+                                        </td>
+
+                                        <td>
+
+                                            {% if payment.status == 'PAID' %}
+
+                                                <span class="status-badge paid">
+                                                    Paid
+                                                </span>
+
+                                            {% else %}
+
+                                                <span class="status-badge pending">
+                                                    Pending
+                                                </span>
+
+                                            {% endif %}
+
+                                        </td>
+
+                                        <td class="text-muted">
+                                            {{ payment.payment_date|date:"d M Y" }}
+                                        </td>
+
+                                    </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="empty-state">
+
+                        <i class="fas fa-receipt"></i>
+
+                        <p>
+                            No payments found.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RECENT ATTENDANCE
+    ====================================================== -->
+
+    <div class="col-lg-6">
+
+        <div class="dashboard-section-card h-100">
+
+            <div class="section-card-header">
+
+                <div>
+
+                    <h5>
+                        📅 Recent Attendance
+                    </h5>
+
+                    <p>
+                        Latest member attendance
+                    </p>
+
+                </div>
+
+                <a
+                    href="{% url 'attendance_list' %}"
+                    class="view-all"
+                >
+                    View All
+                    <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+
+            </div>
+
+
+            <div class="section-card-body p-0">
+
+                {% if recent_attendance %}
+
+                    <div class="table-responsive">
+
+                        <table class="table dashboard-table mb-0">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Member</th>
+                                    <th>Date</th>
+                                    <th>Time In</th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                {% for attendance in recent_attendance %}
+
+                                    <tr>
+
+                                        <td>
+                                            <strong>
+                                                {{ attendance.member.full_name }}
+                                            </strong>
+                                        </td>
+
+                                        <td class="text-muted">
+                                            {{ attendance.date|date:"d M Y" }}
+                                        </td>
+
+                                        <td>
+
+                                            {% if attendance.time_in %}
+
+                                                {{ attendance.time_in|date:"h:i A" }}
+
+                                            {% else %}
+
+                                                —
+
+                                            {% endif %}
+
+                                        </td>
+
+                                    </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="empty-state">
+
+                        <i class="fas fa-calendar-xmark"></i>
+
+                        <p>
+                            No attendance records found.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RECENT ENQUIRIES
+    ====================================================== -->
+
+    <div class="col-lg-6">
+
+        <div class="dashboard-section-card">
+
+            <div class="section-card-header">
+
+                <div>
+
+                    <h5>
+                        📩 Recent Enquiries
+                    </h5>
+
+                    <p>
+                        Latest customer enquiries
+                    </p>
+
+                </div>
+
+                <a
+                    href="{% url 'enquiries_list' %}"
+                    class="view-all"
+                >
+                    View All
+                    <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+
+            </div>
+
+
+            <div class="section-card-body">
+
+                {% if recent_enquiries %}
+
+                    {% for enquiry in recent_enquiries %}
+
+                        <div class="enquiry-item">
+
+                            <div class="enquiry-main">
+
+                                <div class="enquiry-name">
+                                    {{ enquiry.name }}
+                                </div>
+
+                                <div class="enquiry-email">
+                                    {{ enquiry.email }}
+                                </div>
+
+                                <p>
+                                    {{ enquiry.message|truncatechars:100 }}
+                                </p>
+
+                            </div>
+
+
+                            <div>
+
+                                {% if enquiry.status == 'NEW' %}
+
+                                    <span class="status-badge new">
+                                        New
+                                    </span>
+
+                                {% elif enquiry.status == 'SEEN' %}
+
+                                    <span class="status-badge seen">
+                                        Seen
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status-badge resolved">
+                                        Resolved
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="empty-state">
+
+                        <i class="fas fa-envelope-open"></i>
+
+                        <p>
+                            No enquiries found.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         EQUIPMENT SUMMARY
+    ====================================================== -->
+
+    <div class="col-lg-6">
+
+        <div class="dashboard-section-card">
+
+            <div class="section-card-header">
+
+                <div>
+
+                    <h5>
+                        🏋️ Equipment Summary
+                    </h5>
+
+                    <p>
+                        Current gym equipment status
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="section-card-body">
+
+                <div class="equipment-summary">
+
+                    <div class="equipment-stat">
+
+                        <div class="equipment-icon">
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Total Equipment
+                            </span>
+
+                            <strong>
+                                {{ total_equipment }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="equipment-stat">
+
+                        <div class="equipment-icon active">
+                            <i class="fas fa-circle-check"></i>
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Active Equipment
+                            </span>
+
+                            <strong class="text-success">
+                                {{ active_equipment }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <a
+                    href="{% url 'equipment_list' %}"
+                    class="btn btn-outline-primary w-100 mt-4"
+                >
+                    <i class="fas fa-gears me-2"></i>
+                    Manage Equipment
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+```
+
+</div>
+
+<!-- =============================================================
+     ADMIN DASHBOARD STYLES
+============================================================== -->
+
+<style>
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.dashboard-label {
+    display: inline-block;
+    color: #7c3aed;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    margin-bottom: 6px;
+}
+
+.dashboard-header h1 {
+    color: #111827;
+}
+
+.dashboard-header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+
+/* =========================================================
+   SECTION TITLES
+========================================================= */
+
+.section-title {
+    margin-bottom: 18px;
+}
+
+.section-title h5 {
+    margin-bottom: 3px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.section-title h5 i {
+    color: #7c3aed;
+}
+
+.section-title p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+
+/* =========================================================
+   STAT CARDS
+========================================================= */
+
+.stat-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 170px;
+    padding: 24px;
+    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 5px 18px rgba(17, 24, 39, 0.06);
+    transition: all 0.25s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(17, 24, 39, 0.10);
+}
+
+.stat-card::after {
+    content: "";
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    right: -35px;
+    bottom: -35px;
+    background: rgba(124, 58, 237, 0.06);
+}
+
+.stat-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.stat-label {
+    display: block;
+    color: #6b7280;
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+.stat-card h2 {
+    margin: 0;
+    color: #111827;
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.stat-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+}
+
+.stat-description {
+    display: block;
+    color: #9ca3af;
+    font-size: 0.8rem;
+    margin-top: 18px;
+}
+
+.stat-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 18px;
+    color: #7c3aed;
+    text-decoration: none;
+    font-size: 0.84rem;
+    font-weight: 600;
+}
+
+.stat-link:hover {
+    color: #ec4899;
+}
+
+
+/* CARD VARIANTS */
+
+.stat-purple .stat-icon {
+    color: #7c3aed;
+    background: #ede9fe;
+}
+
+.stat-green .stat-icon {
+    color: #16a34a;
+    background: #dcfce7;
+}
+
+.stat-cyan .stat-icon {
+    color: #0891b2;
+    background: #cffafe;
+}
+
+.stat-pink .stat-icon {
+    color: #db2777;
+    background: #fce7f3;
+}
+
+.stat-revenue .stat-icon {
+    color: #16a34a;
+    background: #dcfce7;
+}
+
+.stat-warning .stat-icon {
+    color: #d97706;
+    background: #fef3c7;
+}
+
+.stat-blue .stat-icon {
+    color: #2563eb;
+    background: #dbeafe;
+}
+
+.stat-danger .stat-icon {
+    color: #dc2626;
+    background: #fee2e2;
+}
+
+
+/* =========================================================
+   MINI STAT CARDS
+========================================================= */
+
+.mini-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px;
+    min-height: 90px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    box-shadow: 0 4px 15px rgba(17, 24, 39, 0.05);
+    transition: 0.2s ease;
+}
+
+.mini-stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.mini-stat-card > div:nth-child(2) {
+    flex-grow: 1;
+}
+
+.mini-stat-card span {
+    display: block;
+    color: #6b7280;
+    font-size: 0.8rem;
+}
+
+.mini-stat-card strong {
+    display: block;
+    color: #111827;
+    font-size: 1.4rem;
+    margin-top: 2px;
+}
+
+.mini-stat-icon {
+    width: 43px;
+    height: 43px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    background: #f3f0ff;
+    color: #7c3aed;
+}
+
+.mini-stat-card > a {
+    color: #9ca3af;
+    transition: 0.2s ease;
+}
+
+.mini-stat-card > a:hover {
+    color: #7c3aed;
+}
+
+
+/* =========================================================
+   SECTION CARDS
+========================================================= */
+
+.dashboard-section-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 5px 18px rgba(17, 24, 39, 0.05);
+}
+
+.section-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 19px 22px;
+    border-bottom: 1px solid #eef0f3;
+}
+
+.section-card-header h5 {
+    margin: 0;
+    color: #111827;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.section-card-header p {
+    margin: 4px 0 0;
+    color: #9ca3af;
+    font-size: 0.78rem;
+}
+
+.section-card-body {
+    padding: 22px;
+}
+
+.view-all {
+    color: #7c3aed;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.view-all:hover {
+    color: #ec4899;
+}
+
+
+/* =========================================================
+   QUICK ACTIONS
+========================================================= */
+
+.quick-action {
+    min-height: 105px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 16px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 13px;
+    color: #111827;
+    text-decoration: none;
+    transition: all 0.22s ease;
+}
+
+.quick-action:hover {
+    border-color: #c4b5fd;
+    background: #faf9ff;
+    transform: translateY(-3px);
+    box-shadow: 0 7px 18px rgba(124, 58, 237, 0.10);
+}
+
+.quick-icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    background: #ede9fe;
+    color: #7c3aed;
+    font-size: 1rem;
+}
+
+.quick-action strong {
+    display: block;
+    font-size: 0.88rem;
+}
+
+.quick-action small {
+    display: block;
+    color: #9ca3af;
+    font-size: 0.72rem;
+    margin-top: 3px;
+}
+
+.quick-arrow {
+    margin-left: auto;
+    color: #c4b5fd;
+}
+
+
+/* =========================================================
+   TABLES
+========================================================= */
+
+.dashboard-table {
+    font-size: 0.86rem;
+}
+
+.dashboard-table thead th {
+    background: #f8f9fc;
+    color: #6b7280;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 13px 16px;
+}
+
+.dashboard-table tbody td {
+    padding: 14px 16px;
+    border-color: #f1f3f5;
+}
+
+.dashboard-table tbody tr:hover {
+    background: #faf9ff;
+}
+
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.status-badge.paid {
+    color: #15803d;
+    background: #dcfce7;
+}
+
+.status-badge.pending {
+    color: #a16207;
+    background: #fef3c7;
+}
+
+.status-badge.new {
+    color: #b91c1c;
+    background: #fee2e2;
+}
+
+.status-badge.seen {
+    color: #a16207;
+    background: #fef3c7;
+}
+
+.status-badge.resolved {
+    color: #15803d;
+    background: #dcfce7;
+}
+
+
+/* =========================================================
+   ENQUIRIES
+========================================================= */
+
+.enquiry-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 14px 0;
+    border-bottom: 1px solid #eef0f3;
+}
+
+.enquiry-item:last-child {
+    border-bottom: none;
+}
+
+.enquiry-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.enquiry-email {
+    color: #9ca3af;
+    font-size: 0.75rem;
+    margin-top: 2px;
+}
+
+.enquiry-main p {
+    color: #6b7280;
+    font-size: 0.82rem;
+    margin: 7px 0 0;
+}
+
+
+/* =========================================================
+   EQUIPMENT
+========================================================= */
+
+.equipment-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.equipment-stat {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    border-radius: 12px;
+    background: #f8f9fc;
+}
+
+.equipment-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ede9fe;
+    color: #7c3aed;
+}
+
+.equipment-icon.active {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.equipment-stat span {
+    display: block;
+    color: #6b7280;
+    font-size: 0.75rem;
+}
+
+.equipment-stat strong {
+    display: block;
+    color: #111827;
+    font-size: 1.35rem;
+    margin-top: 2px;
+}
+
+
+/* =========================================================
+   EMPTY STATES
+========================================================= */
+
+.empty-state {
+    text-align: center;
+    padding: 35px 20px;
+    color: #9ca3af;
+}
+
+.empty-state i {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 0.85rem;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .dashboard-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .dashboard-header-actions {
+        width: 100%;
+    }
+
+}
+
+@media (max-width: 576px) {
+
+    .dashboard-header h1 {
+        font-size: 1.65rem;
+    }
+
+    .dashboard-header-actions {
+        flex-direction: column;
+    }
+
+    .dashboard-header-actions .btn {
+        width: 100%;
+    }
+
+    .stat-card {
+        min-height: 150px;
+        padding: 20px;
+    }
+
+    .stat-card h2 {
+        font-size: 1.7rem;
+    }
+
+    .section-card-header {
+        padding: 16px;
+    }
+
+    .section-card-body {
+        padding: 16px;
+    }
+
+    .equipment-summary {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
+
+{% endblock %}

@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h1 class="fw-bold">
+                📅 Attendance Details
+            </h1>
+
+            <p class="text-muted">
+                Attendance record information
+            </p>
+
+        </div>
+
+        <a
+            href="{% url 'attendance_list' %}"
+            class="btn btn-secondary"
+        >
+            ← Back to Attendance
+        </a>
+
+    </div>
+
+
+    {% if delete_confirmation %}
+
+    <div class="card shadow-sm border-danger">
+
+        <div class="card-header bg-danger text-white">
+
+            <h5 class="mb-0">
+                Delete Attendance
+            </h5>
+
+        </div>
+
+        <div class="card-body text-center">
+
+            <h4>
+                Are you sure?
+            </h4>
+
+            <p class="text-muted">
+
+                You are about to delete the attendance record for
+
+                <strong>
+                    {{ attendance.member.full_name }}
+                </strong>
+
+                on
+
+                <strong>
+                    {{ attendance.date|date:"d M Y" }}
+                </strong>.
+
+            </p>
+
+
+            <form
+                method="POST"
+                action="{% url 'delete_attendance' attendance.id %}"
+            >
+
+                {% csrf_token %}
+
+                <a
+                    href="{% url 'attendance_detail' attendance.id %}"
+                    class="btn btn-secondary"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn btn-danger"
+                >
+                    🗑 Delete Attendance
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    {% else %}
+
+
+    <div class="row">
+
+        <!-- MEMBER INFORMATION -->
+
+        <div class="col-md-6 mb-4">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-header bg-dark text-white">
+
+                    <h5 class="mb-0">
+                        👤 Member Information
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <p>
+                        <strong>Name:</strong>
+                        {{ attendance.member.full_name }}
+                    </p>
+
+                    <p>
+                        <strong>Username:</strong>
+                        @{{ attendance.member.user.username }}
+                    </p>
+
+                    <p>
+                        <strong>Mobile:</strong>
+                        {{ attendance.member.mobile }}
+                    </p>
+
+                    {% if attendance.member.plan %}
+
+                    <p>
+                        <strong>Plan:</strong>
+                        {{ attendance.member.plan.name }}
+                    </p>
+
+                    {% endif %}
+
+                    {% if attendance.member.trainer %}
+
+                    <p>
+                        <strong>Trainer:</strong>
+                        {{ attendance.member.trainer.name }}
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ATTENDANCE INFORMATION -->
+
+        <div class="col-md-6 mb-4">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-header bg-success text-white">
+
+                    <h5 class="mb-0">
+                        ✓ Attendance Information
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <p>
+                        <strong>Date:</strong>
+                        {{ attendance.date|date:"d M Y" }}
+                    </p>
+
+                    <p>
+
+                        <strong>Check-in Time:</strong>
+
+                        {% if attendance.time_in %}
+
+                            {{ attendance.time_in|date:"h:i A" }}
+
+                        {% else %}
+
+                            Not recorded
+
+                        {% endif %}
+
+                    </p>
+
+                    <p>
+
+                        <strong>Status:</strong>
+
+                        <span class="badge bg-success">
+                            Present
+                        </span>
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACTIONS -->
+
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+
+            <div class="d-flex gap-2">
+
+                <a
+                    href="{% url 'attendance_list' %}"
+                    class="btn btn-secondary"
+                >
+                    ← Attendance List
+                </a>
+
+                <a
+                    href="{% url 'delete_attendance' attendance.id %}"
+                    class="btn btn-outline-danger"
+                >
+                    🗑 Delete Record
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

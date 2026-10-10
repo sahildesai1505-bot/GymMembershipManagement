@@ -1,0 +1,463 @@
+{% extends 'base.html' %}
+
+{% block title %}Members - My Gym{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                👥 Members
+            </h2>
+
+            <p class="text-muted mb-0">
+                Manage all gym members
+            </p>
+        </div>
+
+        <a href="{% url 'add_member' %}"
+           class="btn btn-primary">
+            ➕ Add Member
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         SEARCH & FILTER
+    ====================================================== -->
+
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row g-3">
+
+                    <!-- SEARCH -->
+
+                    <div class="col-md-5">
+
+                        <label class="form-label fw-semibold">
+                            Search
+                        </label>
+
+                        <input
+                            type="text"
+                            name="search"
+                            value="{{ search }}"
+                            class="form-control"
+                            placeholder="Search name, username or mobile..."
+                        >
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    <div class="col-md-3">
+
+                        <label class="form-label fw-semibold">
+                            Status
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Members
+                            </option>
+
+                            <option
+                                value="active"
+                                {% if status == 'active' %}selected{% endif %}
+                            >
+                                Active
+                            </option>
+
+                            <option
+                                value="expired"
+                                {% if status == 'expired' %}selected{% endif %}
+                            >
+                                Expired
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- PLAN -->
+
+                    <div class="col-md-3">
+
+                        <label class="form-label fw-semibold">
+                            Membership Plan
+                        </label>
+
+                        <select
+                            name="plan"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Plans
+                            </option>
+
+                            {% for plan in plans %}
+
+                            <option
+                                value="{{ plan.id }}"
+                                {% if selected_plan == plan.id|stringformat:"s" %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ plan.name }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- BUTTON -->
+
+                    <div class="col-md-1 d-flex align-items-end">
+
+                        <button
+                            type="submit"
+                            class="btn btn-dark w-100"
+                        >
+                            🔍
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MEMBERS TABLE
+    ====================================================== -->
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-dark text-white">
+
+            <div class="d-flex justify-content-between">
+
+                <span class="fw-semibold">
+                    Member List
+                </span>
+
+                <span>
+                    {{ members|length }} member{{ members|length|pluralize }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            {% if members %}
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Member
+                            </th>
+
+                            <th>
+                                Mobile
+                            </th>
+
+                            <th>
+                                Plan
+                            </th>
+
+                            <th>
+                                Trainer
+                            </th>
+
+                            <th>
+                                Start
+                            </th>
+
+                            <th>
+                                End
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th class="text-center">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for member in members %}
+
+                        <tr>
+
+                            <!-- NUMBER -->
+
+                            <td>
+                                {{ forloop.counter }}
+                            </td>
+
+
+                            <!-- MEMBER -->
+
+                            <td>
+
+                                <div class="fw-semibold">
+                                    {{ member.full_name }}
+                                </div>
+
+                                <small class="text-muted">
+                                    @{{ member.user.username }}
+                                </small>
+
+                            </td>
+
+
+                            <!-- MOBILE -->
+
+                            <td>
+                                {{ member.mobile }}
+                            </td>
+
+
+                            <!-- PLAN -->
+
+                            <td>
+
+                                {% if member.plan %}
+
+                                    <span class="fw-semibold">
+                                        {{ member.plan.name }}
+                                    </span>
+
+                                    <br>
+
+                                    <small class="text-muted">
+                                        ₹{{ member.plan.fee }}
+                                    </small>
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        No Plan
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- TRAINER -->
+
+                            <td>
+
+                                {% if member.trainer %}
+
+                                    {{ member.trainer.name }}
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        Not Assigned
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- START -->
+
+                            <td>
+
+                                {% if member.membership_start %}
+
+                                    {{ member.membership_start|date:"d M Y" }}
+
+                                {% else %}
+
+                                    —
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- END -->
+
+                            <td>
+
+                                {% if member.membership_end %}
+
+                                    {{ member.membership_end|date:"d M Y" }}
+
+                                {% else %}
+
+                                    —
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- STATUS -->
+
+                            <td>
+
+                                {% if member.membership_end %}
+
+                                    {% if member.membership_end >= today %}
+
+                                        <span class="badge bg-success">
+                                            Active
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="badge bg-danger">
+                                            Expired
+                                        </span>
+
+                                    {% endif %}
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+                                        No Membership
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ACTIONS -->
+
+                            <td class="text-center">
+
+                                <div class="btn-group">
+
+                                    <a
+                                        href="{% url 'member_detail' member.id %}"
+                                        class="btn btn-sm btn-outline-primary"
+                                        title="View"
+                                    >
+                                        👁️
+                                    </a>
+
+
+                                    <a
+                                        href="{% url 'edit_member' member.id %}"
+                                        class="btn btn-sm btn-outline-warning"
+                                        title="Edit"
+                                    >
+                                        ✏️
+                                    </a>
+
+
+                                    <a
+                                        href="{% url 'deactivate_member' member.id %}"
+                                        class="btn btn-sm btn-outline-danger"
+                                        title="Deactivate"
+                                        onclick="return confirm('Are you sure you want to deactivate this member?');"
+                                    >
+                                        🗑️
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <!-- =================================================
+                 EMPTY STATE
+            ================================================== -->
+
+            <div class="text-center py-5">
+
+                <div style="font-size: 60px;">
+                    👥
+                </div>
+
+                <h4 class="mt-3">
+                    No Members Found
+                </h4>
+
+                <p class="text-muted">
+                    There are no members matching your search.
+                </p>
+
+                <a
+                    href="{% url 'add_member' %}"
+                    class="btn btn-primary"
+                >
+                    ➕ Add First Member
+                </a>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

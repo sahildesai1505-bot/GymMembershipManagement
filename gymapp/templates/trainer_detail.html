@@ -1,0 +1,325 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h1 class="fw-bold">
+                🏋️ Trainer Details
+            </h1>
+
+            <p class="text-muted">
+                Complete trainer information
+            </p>
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <a href="{% url 'trainers_list' %}"
+               class="btn btn-secondary">
+                ← Back to Trainers
+            </a>
+
+            <a href="{% url 'edit_trainer' trainer.id %}"
+               class="btn btn-warning">
+                ✏ Edit
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- TRAINER INFORMATION -->
+
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-header bg-dark text-white">
+
+            <h4 class="mb-0">
+                🏋️ {{ trainer.name }}
+            </h4>
+
+        </div>
+
+
+        <div class="card-body p-4">
+
+            <div class="row">
+
+                <div class="col-md-6 mb-4">
+
+                    <h6 class="text-muted">
+                        Trainer Name
+                    </h6>
+
+                    <h5>
+                        {{ trainer.name }}
+                    </h5>
+
+                </div>
+
+
+                <div class="col-md-6 mb-4">
+
+                    <h6 class="text-muted">
+                        📱 Mobile Number
+                    </h6>
+
+                    <h5>
+                        {{ trainer.mobile }}
+                    </h5>
+
+                </div>
+
+
+                <div class="col-md-6 mb-4">
+
+                    <h6 class="text-muted">
+                        🎯 Specialization
+                    </h6>
+
+                    <h5>
+                        {{ trainer.specialization }}
+                    </h5>
+
+                </div>
+
+
+                <div class="col-md-6 mb-4">
+
+                    <h6 class="text-muted">
+                        🕐 Shift Timing
+                    </h6>
+
+                    <h5>
+                        {{ trainer.shift_timing }}
+                    </h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ASSIGNED MEMBERS -->
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-dark text-white">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <h5 class="mb-0">
+                    👥 Assigned Members
+                </h5>
+
+                <span class="badge bg-light text-dark">
+                    {{ members.count }} Members
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            {% if members %}
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th>
+                                    #
+                                </th>
+
+                                <th>
+                                    Member Name
+                                </th>
+
+                                <th>
+                                    Username
+                                </th>
+
+                                <th>
+                                    Mobile
+                                </th>
+
+                                <th>
+                                    Plan
+                                </th>
+
+                                <th>
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for member in members %}
+
+                            <tr>
+
+                                <td>
+                                    {{ forloop.counter }}
+                                </td>
+
+
+                                <td>
+
+                                    <strong>
+                                        {{ member.full_name }}
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+                                    {{ member.user.username }}
+                                </td>
+
+
+                                <td>
+                                    {{ member.mobile }}
+                                </td>
+
+
+                                <td>
+
+                                    {% if member.plan %}
+
+                                        {{ member.plan.name }}
+
+                                    {% else %}
+
+                                        <span class="text-muted">
+                                            No Plan
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    <a
+                                        href="{% url 'member_detail' member.id %}"
+                                        class="btn btn-outline-primary btn-sm"
+                                    >
+                                        👁 View
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="text-center p-5">
+
+                    <div style="font-size: 50px;">
+                        👥
+                    </div>
+
+                    <h5 class="mt-3">
+                        No Members Assigned
+                    </h5>
+
+                    <p class="text-muted">
+                        No members are currently assigned to this trainer.
+                    </p>
+
+                    <a
+                        href="{% url 'add_member' %}"
+                        class="btn btn-primary"
+                    >
+                        ➕ Add Member
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- ACTIONS -->
+
+    <div class="mt-4 d-flex gap-2">
+
+        <a
+            href="{% url 'edit_trainer' trainer.id %}"
+            class="btn btn-warning"
+        >
+            ✏ Edit Trainer
+        </a>
+
+        <a
+            href="{% url 'delete_trainer' trainer.id %}"
+            class="btn btn-danger"
+        >
+            🗑 Delete Trainer
+        </a>
+
+        <a
+            href="{% url 'trainers_list' %}"
+            class="btn btn-secondary"
+        >
+            ← Back
+        </a>
+
+    </div>
+
+</div>
+
+
+<style>
+
+.card {
+    border-radius: 15px;
+}
+
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+}
+
+.table {
+    vertical-align: middle;
+}
+
+.btn {
+    border-radius: 8px;
+}
+
+</style>
+
+{% endblock %}

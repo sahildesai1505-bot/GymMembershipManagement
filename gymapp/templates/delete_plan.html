@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-danger text-white">
+            <h4 class="mb-0">
+                🗑 Delete Membership Plan
+            </h4>
+        </div>
+
+        <div class="card-body text-center">
+
+            <h3 class="mb-3">
+                Are you sure?
+            </h3>
+
+            <p class="text-muted">
+                You are about to delete:
+            </p>
+
+            <h4 class="text-danger">
+                {{ plan.name }}
+            </h4>
+
+            <p>
+                Fee: ₹{{ plan.fee }}
+                <br>
+                Duration: {{ plan.duration_months }} month(s)
+            </p>
+
+            <div class="alert alert-warning">
+
+                ⚠️ This action cannot be undone.
+
+                {% if plan.members.count %}
+                    <br>
+                    This plan currently has
+                    <strong>{{ plan.members.count }}</strong>
+                    member(s) assigned to it.
+                {% endif %}
+
+            </div>
+
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="btn btn-danger"
+                >
+                    🗑 Yes, Delete Plan
+                </button>
+
+                <a
+                    href="{% url 'plans_list' %}"
+                    class="btn btn-secondary"
+                >
+                    Cancel
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

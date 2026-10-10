@@ -1,0 +1,426 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <!-- ===================================================== -->
+    <!-- HEADER -->
+    <!-- ===================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h1 class="fw-bold">
+                📋 Attendance Management
+            </h1>
+
+            <p class="text-muted">
+                Search, filter and manage gym attendance
+            </p>
+
+        </div>
+
+        <a
+            href="{% url 'mark_attendance' %}"
+            class="btn btn-success"
+        >
+            ✅ Mark Attendance
+        </a>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- STATISTICS -->
+    <!-- ===================================================== -->
+
+    <div class="row mb-4">
+
+        <!-- TODAY -->
+
+        <div class="col-md-4 mb-3">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+                        Today's Attendance
+                    </h6>
+
+                    <h2 class="fw-bold text-success">
+                        {{ today_attendance }}
+                    </h2>
+
+                    <small class="text-muted">
+                        {{ today|date:"d M Y" }}
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL MEMBERS -->
+
+        <div class="col-md-4 mb-3">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+                        Total Members
+                    </h6>
+
+                    <h2 class="fw-bold text-primary">
+                        {{ total_members }}
+                    </h2>
+
+                    <small class="text-muted">
+                        Registered members
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- MONTH -->
+
+        <div class="col-md-4 mb-3">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+                        This Month
+                    </h6>
+
+                    <h2 class="fw-bold text-warning">
+                        {{ current_month_attendance }}
+                    </h2>
+
+                    <small class="text-muted">
+                        Total check-ins
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- SEARCH + FILTER -->
+    <!-- ===================================================== -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form
+                method="GET"
+                action="{% url 'attendance_list' %}"
+            >
+
+                <div class="row align-items-end">
+
+                    <!-- SEARCH -->
+
+                    <div class="col-md-5 mb-3">
+
+                        <label class="form-label fw-bold">
+                            🔎 Search Member
+                        </label>
+
+                        <input
+                            type="text"
+                            name="search"
+                            class="form-control"
+                            placeholder="Name, mobile or username"
+                            value="{{ search }}"
+                        >
+
+                    </div>
+
+
+                    <!-- DATE -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label class="form-label fw-bold">
+                            📅 Attendance Date
+                        </label>
+
+                        <input
+                            type="date"
+                            name="date"
+                            class="form-control"
+                            value="{{ selected_date }}"
+                        >
+
+                    </div>
+
+
+                    <!-- BUTTONS -->
+
+                    <div class="col-md-3 mb-3">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-100 mb-2"
+                        >
+                            🔎 Search
+                        </button>
+
+                        <a
+                            href="{% url 'attendance_list' %}"
+                            class="btn btn-outline-secondary w-100"
+                        >
+                            ↻ Clear Filters
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- ACTIVE FILTER -->
+    <!-- ===================================================== -->
+
+    {% if search or selected_date %}
+
+    <div class="alert alert-info">
+
+        <strong>
+            Active Filters:
+        </strong>
+
+        {% if search %}
+
+            <span class="badge bg-primary ms-2">
+                Search: {{ search }}
+            </span>
+
+        {% endif %}
+
+        {% if selected_date %}
+
+            <span class="badge bg-success ms-2">
+                Date: {{ selected_date }}
+            </span>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- ===================================================== -->
+    <!-- ATTENDANCE TABLE -->
+    <!-- ===================================================== -->
+
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-dark text-white">
+
+            <div class="d-flex justify-content-between">
+
+                <h5 class="mb-0">
+                    Attendance Records
+                </h5>
+
+                <span>
+                    {{ attendances|length }} record(s)
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Member
+                            </th>
+
+                            <th>
+                                Mobile
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Check-in
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for attendance in attendances %}
+
+                        <tr>
+
+                            <td>
+                                {{ forloop.counter }}
+                            </td>
+
+
+                            <td>
+
+                                <strong>
+                                    {{ attendance.member.full_name }}
+                                </strong>
+
+                                <br>
+
+                                <small class="text-muted">
+                                    @{{ attendance.member.user.username }}
+                                </small>
+
+                            </td>
+
+
+                            <td>
+                                {{ attendance.member.mobile }}
+                            </td>
+
+
+                            <td>
+
+                                {{ attendance.date|date:"d M Y" }}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if attendance.time_in %}
+
+                                    {{ attendance.time_in|date:"h:i A" }}
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        Not recorded
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="badge bg-success">
+
+                                    ✓ Present
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <a
+                                    href="{% url 'attendance_detail' attendance.id %}"
+                                    class="btn btn-sm btn-outline-primary"
+                                >
+                                    👁 View
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="7"
+                                class="text-center py-5"
+                            >
+
+                                <h4>
+                                    📭 No Attendance Found
+                                </h4>
+
+                                <p class="text-muted">
+                                    No attendance records match your search.
+                                </p>
+
+                                <a
+                                    href="{% url 'mark_attendance' %}"
+                                    class="btn btn-success"
+                                >
+                                    ✅ Mark Attendance
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

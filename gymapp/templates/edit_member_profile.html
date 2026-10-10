@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Edit Profile - My Gym
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2>
+                👤 Edit My Profile
+            </h2>
+
+            <p class="text-muted mb-0">
+                Update your personal information
+            </p>
+        </div>
+
+        <a href="{% url 'member_profile' %}"
+           class="btn btn-dark">
+            ← Back to Profile
+        </a>
+
+    </div>
+
+
+    <!-- EDIT PROFILE CARD -->
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-dark text-white">
+
+            <strong>
+                👤 Personal Information
+            </strong>
+
+        </div>
+
+
+        <div class="card-body p-4">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                <!-- FULL NAME -->
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        value="{{ member.full_name }}"
+                        disabled
+                    >
+
+                    <small class="text-muted">
+                        Your name can only be changed by the administrator.
+                    </small>
+
+                </div>
+
+
+                <!-- USERNAME -->
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        value="{{ member.user.username }}"
+                        disabled
+                    >
+
+                </div>
+
+
+                <!-- MOBILE -->
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Mobile Number
+                    </label>
+
+                    <input
+                        type="text"
+                        name="mobile"
+                        class="form-control"
+                        value="{{ member.mobile|default:'' }}"
+                        placeholder="Enter mobile number"
+                    >
+
+                </div>
+
+
+                <!-- AGE -->
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Age
+                    </label>
+
+                    <input
+                        type="number"
+                        name="age"
+                        class="form-control"
+                        value="{{ member.age|default:'' }}"
+                        placeholder="Enter your age"
+                        min="1"
+                        max="100"
+                    >
+
+                </div>
+
+
+                <!-- GENDER -->
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Gender
+                    </label>
+
+                    <select
+                        name="gender"
+                        class="form-select"
+                    >
+
+                        <option value="">
+                            Select Gender
+                        </option>
+
+                        <option value="Male"
+                            {% if member.gender == "Male" %}
+                                selected
+                            {% endif %}
+                        >
+                            Male
+                        </option>
+
+                        <option value="Female"
+                            {% if member.gender == "Female" %}
+                                selected
+                            {% endif %}
+                        >
+                            Female
+                        </option>
+
+                        <option value="Other"
+                            {% if member.gender == "Other" %}
+                                selected
+                            {% endif %}
+                        >
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- ADDRESS -->
+                <div class="mb-4">
+
+                    <label class="form-label">
+                        Address
+                    </label>
+
+                    <textarea
+                        name="address"
+                        class="form-control"
+                        rows="4"
+                        placeholder="Enter your address"
+                    >{{ member.address|default:'' }}</textarea>
+
+                </div>
+
+
+                <!-- BUTTONS -->
+                <div class="d-flex gap-2">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        💾 Save Changes
+                    </button>
+
+
+                    <a
+                        href="{% url 'member_profile' %}"
+                        class="btn btn-secondary"
+                    >
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

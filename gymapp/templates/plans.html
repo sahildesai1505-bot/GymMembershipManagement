@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h1 class="fw-bold">💳 Membership Plans</h1>
+            <p class="text-muted">
+                Manage all gym membership plans
+            </p>
+        </div>
+
+        <a href="{% url 'add_plan' %}" class="btn btn-primary">
+            ➕ Add Plan
+        </a>
+
+    </div>
+
+
+    <!-- PLAN LIST -->
+
+    <div class="row">
+
+        {% for plan in plans %}
+
+        <div class="col-md-4 mb-4">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-header bg-dark text-white">
+                    <h4 class="mb-0">
+                        {{ plan.name }}
+                    </h4>
+                </div>
+
+                <div class="card-body">
+
+                    <h2 class="text-primary">
+                        ₹{{ plan.fee }}
+                    </h2>
+
+                    <p>
+                        <strong>Duration:</strong>
+                        {{ plan.duration_months }} month(s)
+                    </p>
+
+                    <p class="text-muted">
+                        {% if plan.description %}
+                            {{ plan.description }}
+                        {% else %}
+                            No description available.
+                        {% endif %}
+                    </p>
+
+                    <hr>
+
+                    <p>
+                        <strong>Members:</strong>
+                        {{ plan.members.count }}
+                    </p>
+
+                </div>
+
+                <div class="card-footer bg-white">
+
+                    <div class="d-flex gap-2">
+
+                        <a
+                            href="{% url 'plan_detail' plan.id %}"
+                            class="btn btn-outline-primary btn-sm"
+                        >
+                            👁 View
+                        </a>
+
+                        <a
+                            href="{% url 'edit_plan' plan.id %}"
+                            class="btn btn-outline-warning btn-sm"
+                        >
+                            ✏ Edit
+                        </a>
+
+                        <a
+                            href="{% url 'delete_plan' plan.id %}"
+                            class="btn btn-outline-danger btn-sm"
+                        >
+                            🗑 Delete
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12">
+
+            <div class="alert alert-info text-center">
+
+                <h4>No Membership Plans Found</h4>
+
+                <p>
+                    Create your first membership plan.
+                </p>
+
+                <a
+                    href="{% url 'add_plan' %}"
+                    class="btn btn-primary"
+                >
+                    ➕ Add First Plan
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

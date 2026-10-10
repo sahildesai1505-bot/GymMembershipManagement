@@ -1,0 +1,330 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid py-5">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h1 class="fw-bold">🏋️ Equipment Management</h1>
+            <p class="text-muted">
+                Manage your gym equipment and inventory
+            </p>
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <a href="{% url 'admin_dashboard' %}"
+               class="btn btn-secondary">
+                ← Dashboard
+            </a>
+
+            <a href="{% url 'add_equipment' %}"
+               class="btn btn-primary">
+                ➕ Add Equipment
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- MESSAGES -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+                </button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <!-- EQUIPMENT TABLE -->
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-dark text-white">
+
+            <h5 class="mb-0">
+                📋 Equipment Inventory
+            </h5>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            {% if equipment %}
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th>#</th>
+
+                                <th>Equipment</th>
+
+                                <th>Units</th>
+
+                                <th>Price</th>
+
+                                <th>Purchase Date</th>
+
+                                <th>Status</th>
+
+                                <th>Actions</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for item in equipment %}
+
+                            <tr>
+
+                                <!-- NUMBER -->
+
+                                <td>
+                                    {{ forloop.counter }}
+                                </td>
+
+
+                                <!-- NAME -->
+
+                                <td>
+
+                                    <strong>
+                                        🏋️ {{ item.name }}
+                                    </strong>
+
+                                </td>
+
+
+                                <!-- UNITS -->
+
+                                <td>
+
+                                    <span class="badge bg-info text-dark">
+                                        {{ item.units }} units
+                                    </span>
+
+                                </td>
+
+
+                                <!-- PRICE -->
+
+                                <td>
+                                    ₹{{ item.price }}
+                                </td>
+
+
+                                <!-- PURCHASE DATE -->
+
+                                <td>
+
+                                    {% if item.purchase_date %}
+
+                                        {{ item.purchase_date|date:"d M Y" }}
+
+                                    {% else %}
+
+                                        —
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- STATUS -->
+
+                                <td>
+
+                                    {% if item.is_active %}
+
+                                        <span class="badge bg-success">
+                                            🟢 Active
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="badge bg-danger">
+                                            🔴 Inactive
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- ACTIONS -->
+
+                                <td>
+
+                                    <div class="d-flex gap-2 flex-wrap">
+
+                                        <a
+                                            href="{% url 'equipment_detail' item.id %}"
+                                            class="btn btn-outline-primary btn-sm"
+                                        >
+                                            👁 View
+                                        </a>
+
+
+                                        <a
+                                            href="{% url 'edit_equipment' item.id %}"
+                                            class="btn btn-outline-warning btn-sm"
+                                        >
+                                            ✏ Edit
+                                        </a>
+
+
+                                        <form
+                                            method="POST"
+                                            action="{% url 'toggle_equipment' item.id %}"
+                                            style="display:inline;"
+                                        >
+
+                                            {% csrf_token %}
+
+                                            {% if item.is_active %}
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-outline-danger btn-sm"
+                                                >
+                                                    🔴 Deactivate
+                                                </button>
+
+                                            {% else %}
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-outline-success btn-sm"
+                                                >
+                                                    🟢 Activate
+                                                </button>
+
+                                            {% endif %}
+
+                                        </form>
+
+
+                                        <form
+                                            method="POST"
+                                            action="{% url 'delete_equipment' item.id %}"
+                                            style="display:inline;"
+                                            onsubmit="return confirm('Are you sure you want to permanently delete this equipment?');"
+                                        >
+
+                                            {% csrf_token %}
+
+                                            <button
+                                                type="submit"
+                                                class="btn btn-outline-dark btn-sm"
+                                            >
+                                                🗑 Delete
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <!-- EMPTY STATE -->
+
+                <div class="text-center p-5">
+
+                    <div class="empty-icon">
+                        🏋️
+                    </div>
+
+                    <h4 class="mt-3">
+                        No Equipment Found
+                    </h4>
+
+                    <p class="text-muted">
+                        Add your first piece of gym equipment.
+                    </p>
+
+                    <a
+                        href="{% url 'add_equipment' %}"
+                        class="btn btn-primary"
+                    >
+                        ➕ Add Equipment
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+
+.card {
+    border-radius: 15px;
+}
+
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+}
+
+.table {
+    vertical-align: middle;
+}
+
+.btn {
+    border-radius: 8px;
+}
+
+.badge {
+    padding: 7px 10px;
+}
+
+.empty-icon {
+    font-size: 60px;
+}
+
+</style>
+
+{% endblock %}

@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h1 class="fw-bold">
+                💳 {{ plan.name }}
+            </h1>
+
+            <p class="text-muted">
+                Membership plan details
+            </p>
+
+        </div>
+
+        <div>
+
+            <a
+                href="{% url 'edit_plan' plan.id %}"
+                class="btn btn-warning"
+            >
+                ✏ Edit
+            </a>
+
+            <a
+                href="{% url 'plans_list' %}"
+                class="btn btn-secondary"
+            >
+                ← Back
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- PLAN INFORMATION -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header bg-dark text-white">
+
+            <h4 class="mb-0">
+                Plan Information
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <h6 class="text-muted">
+                        Plan Name
+                    </h6>
+
+                    <h4>
+                        {{ plan.name }}
+                    </h4>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <h6 class="text-muted">
+                        Fee
+                    </h6>
+
+                    <h4 class="text-primary">
+                        ₹{{ plan.fee }}
+                    </h4>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <h6 class="text-muted">
+                        Duration
+                    </h6>
+
+                    <h4>
+                        {{ plan.duration_months }} month(s)
+                    </h4>
+
+                </div>
+
+            </div>
+
+            <hr>
+
+            <h6 class="text-muted">
+                Description
+            </h6>
+
+            <p>
+                {% if plan.description %}
+                    {{ plan.description }}
+                {% else %}
+                    No description available.
+                {% endif %}
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- MEMBERS -->
+
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-dark text-white">
+
+            <h4 class="mb-0">
+                👥 Members Using This Plan
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            {% if members %}
+
+            <div class="table-responsive">
+
+                <table class="table table-hover">
+
+                    <thead>
+
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Mobile</th>
+                            <th>Start</th>
+                            <th>End</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for member in members %}
+
+                        <tr>
+
+                            <td>
+                                {{ forloop.counter }}
+                            </td>
+
+                            <td>
+                                {{ member.full_name }}
+                            </td>
+
+                            <td>
+                                {{ member.mobile }}
+                            </td>
+
+                            <td>
+                                {{ member.membership_start|date:"d M Y" }}
+                            </td>
+
+                            <td>
+                                {{ member.membership_end|date:"d M Y" }}
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="alert alert-info mb-0">
+
+                No members are currently assigned to this plan.
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

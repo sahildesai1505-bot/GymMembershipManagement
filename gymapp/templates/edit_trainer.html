@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+
+    <!-- ============================================================
+         HEADER
+    ============================================================ -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h1 class="fw-bold">
+                ✏️ Edit Trainer
+            </h1>
+
+            <p class="text-muted mb-0">
+                Modify trainer information
+            </p>
+        </div>
+
+        <a
+            href="{% url 'trainer_detail' trainer.id %}"
+            class="btn btn-outline-secondary"
+        >
+            ← Back to Trainer
+        </a>
+
+    </div>
+
+
+    <!-- ============================================================
+         EDIT FORM
+    ============================================================ -->
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm">
+
+                <div class="card-header bg-dark text-white">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="fs-2 me-3">
+                            👨‍🏫
+                        </div>
+
+                        <div>
+
+                            <h4 class="mb-0">
+                                {{ trainer.name }}
+                            </h4>
+
+                            <small>
+                                Edit Trainer Information
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card-body p-4">
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+
+                        <!-- ====================================================
+                             TRAINER NAME
+                        ==================================================== -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="name"
+                                class="form-label fw-semibold"
+                            >
+                                Trainer Name
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                name="name"
+                                id="name"
+                                class="form-control"
+                                value="{{ trainer.name }}"
+                                placeholder="Enter trainer's full name"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- ====================================================
+                             MOBILE
+                        ==================================================== -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="mobile"
+                                class="form-label fw-semibold"
+                            >
+                                Mobile Number
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <input
+                                type="tel"
+                                name="mobile"
+                                id="mobile"
+                                class="form-control"
+                                value="{{ trainer.mobile }}"
+                                placeholder="Enter 10-digit mobile number"
+                                maxlength="10"
+                                pattern="[0-9]{10}"
+                                required
+                            >
+
+                            <div class="form-text">
+                                Enter a valid 10-digit mobile number.
+                            </div>
+
+                        </div>
+
+
+                        <!-- ====================================================
+                             SPECIALIZATION
+                        ==================================================== -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="specialization"
+                                class="form-label fw-semibold"
+                            >
+                                Specialization
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                name="specialization"
+                                id="specialization"
+                                class="form-control"
+                                value="{{ trainer.specialization }}"
+                                placeholder="e.g. Strength Training, Cardio, Yoga"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- ====================================================
+                             SHIFT TIMING
+                        ==================================================== -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="shift_timing"
+                                class="form-label fw-semibold"
+                            >
+                                Shift Timing
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                name="shift_timing"
+                                id="shift_timing"
+                                class="form-control"
+                                value="{{ trainer.shift_timing }}"
+                                placeholder="e.g. 6:00 AM - 10:00 AM"
+                                required
+                            >
+
+                            <div class="form-text">
+                                Enter the trainer's working shift.
+                            </div>
+
+                        </div>
+
+
+                        <!-- ====================================================
+                             WARNING / INFORMATION
+                        ==================================================== -->
+
+                        <div class="alert alert-warning">
+
+                            <strong>⚠️ Note:</strong>
+
+                            Changing trainer information will update the
+                            existing trainer record. Assigned members will
+                            remain assigned to this trainer.
+
+                        </div>
+
+
+                        <!-- ====================================================
+                             BUTTONS
+                        ==================================================== -->
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+
+                            <a
+                                href="{% url 'trainer_detail' trainer.id %}"
+                                class="btn btn-outline-secondary"
+                            >
+                                Cancel
+                            </a>
+
+                            <button
+                                type="submit"
+                                class="btn btn-success"
+                            >
+                                💾 Save Changes
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

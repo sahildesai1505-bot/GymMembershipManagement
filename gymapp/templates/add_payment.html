@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h1 class="fw-bold">💰 Add Payment</h1>
+            <p class="text-muted">
+                Record a new gym payment
+            </p>
+        </div>
+
+        <a href="{% url 'payments_list' %}" class="btn btn-secondary">
+            ← Back to Payments
+        </a>
+
+    </div>
+
+
+    <!-- FORM CARD -->
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-dark text-white">
+            <h4 class="mb-0">
+                Payment Information
+            </h4>
+        </div>
+
+        <div class="card-body">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                <!-- MEMBER -->
+                <div class="mb-4">
+
+                    <label class="form-label fw-bold">
+                        Member *
+                    </label>
+
+                    <select
+                        name="member"
+                        class="form-select"
+                        required
+                    >
+
+                        <option value="">
+                            -- Select Member --
+                        </option>
+
+                        {% for member in members %}
+
+                            <option value="{{ member.id }}">
+                                {{ member.full_name }}
+                                - {{ member.mobile }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- PLAN -->
+                <div class="mb-4">
+
+                    <label class="form-label fw-bold">
+                        Membership Plan
+                    </label>
+
+                    <select
+                        name="plan"
+                        class="form-select"
+                    >
+
+                        <option value="">
+                            -- Select Plan --
+                        </option>
+
+                        {% for plan in plans %}
+
+                            <option value="{{ plan.id }}">
+
+                                {{ plan.name }}
+                                - ₹{{ plan.fee }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="row">
+
+
+                    <!-- AMOUNT -->
+                    <div class="col-md-6 mb-4">
+
+                        <label class="form-label fw-bold">
+                            Amount *
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                ₹
+                            </span>
+
+                            <input
+                                type="number"
+                                name="amount"
+                                class="form-control"
+                                placeholder="Enter amount"
+                                min="0"
+                                step="0.01"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PAYMENT DATE -->
+                    <div class="col-md-6 mb-4">
+
+                        <label class="form-label fw-bold">
+                            Payment Date *
+                        </label>
+
+                        <input
+                            type="date"
+                            name="payment_date"
+                            class="form-control"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="row">
+
+
+                    <!-- PAYMENT MODE -->
+                    <div class="col-md-6 mb-4">
+
+                        <label class="form-label fw-bold">
+                            Payment Mode *
+                        </label>
+
+                        <select
+                            name="mode"
+                            class="form-select"
+                            required
+                        >
+
+                            <option value="">
+                                -- Select Mode --
+                            </option>
+
+                            <option value="CASH">
+                                💵 Cash
+                            </option>
+
+                            <option value="ONLINE">
+                                💳 Online
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- PAYMENT STATUS -->
+                    <div class="col-md-6 mb-4">
+
+                        <label class="form-label fw-bold">
+                            Payment Status *
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select"
+                            required
+                        >
+
+                            <option value="">
+                                -- Select Status --
+                            </option>
+
+                            <option value="PAID">
+                                ✅ Paid
+                            </option>
+
+                            <option value="PENDING">
+                                ⏳ Pending
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- NOTES -->
+                <div class="mb-4">
+
+                    <label class="form-label fw-bold">
+                        Notes
+                    </label>
+
+                    <textarea
+                        name="notes"
+                        class="form-control"
+                        rows="4"
+                        placeholder="Enter any additional payment notes..."
+                    ></textarea>
+
+                </div>
+
+
+                <!-- BUTTONS -->
+
+                <div class="d-flex gap-2">
+
+                    <button
+                        type="submit"
+                        class="btn btn-success"
+                    >
+                        💾 Save Payment
+                    </button>
+
+                    <a
+                        href="{% url 'payments_list' %}"
+                        class="btn btn-secondary"
+                    >
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

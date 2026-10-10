@@ -1,0 +1,572 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- ============================================================
+         HEADER
+    ============================================================ -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h1 class="fw-bold">
+                👤 Member Details
+            </h1>
+
+            <p class="text-muted mb-0">
+                View complete member information
+            </p>
+
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <a
+                href="{% url 'edit_member' member.id %}"
+                class="btn btn-warning"
+            >
+                ✏️ Edit
+            </a>
+
+            <a
+                href="{% url 'members_list' %}"
+                class="btn btn-secondary"
+            >
+                ← Back to Members
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         MEMBER PROFILE
+    ============================================================ -->
+
+    <div class="row">
+
+
+        <!-- ========================================================
+             BASIC INFORMATION
+        ======================================================== -->
+
+        <div class="col-md-6 mb-4">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-header bg-dark text-white">
+
+                    <h5 class="mb-0">
+                        👤 Personal Information
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <div class="info-row">
+
+                        <strong>Full Name:</strong>
+
+                        <span>
+                            {{ member.full_name }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <strong>Username:</strong>
+
+                        <span>
+                            @{{ member.user.username }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <strong>Mobile:</strong>
+
+                        <span>
+                            {{ member.mobile }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <strong>Age:</strong>
+
+                        <span>
+
+                            {% if member.age %}
+                                {{ member.age }}
+                            {% else %}
+                                Not provided
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <strong>Gender:</strong>
+
+                        <span>
+
+                            {% if member.gender %}
+                                {{ member.get_gender_display }}
+                            {% else %}
+                                Not provided
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <strong>Join Date:</strong>
+
+                        <span>
+                            {{ member.join_date|date:"d M Y" }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <strong>Address:</strong>
+
+                        <span>
+
+                            {% if member.address %}
+                                {{ member.address }}
+                            {% else %}
+                                Not provided
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================================
+             MEMBERSHIP INFORMATION
+        ======================================================== -->
+
+        <div class="col-md-6 mb-4">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-header bg-primary text-white">
+
+                    <h5 class="mb-0">
+                        💳 Membership Information
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+
+                    <div class="info-row">
+
+                        <strong>Plan:</strong>
+
+                        <span>
+
+                            {% if member.plan %}
+
+                                {{ member.plan.name }}
+
+                            {% else %}
+
+                                No Plan Assigned
+
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    {% if member.plan %}
+
+                    <div class="info-row">
+
+                        <strong>Plan Fee:</strong>
+
+                        <span>
+                            ₹{{ member.plan.fee }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <strong>Duration:</strong>
+
+                        <span>
+                            {{ member.plan.duration_months }}
+                            month(s)
+                        </span>
+
+                    </div>
+
+                    {% endif %}
+
+
+                    <div class="info-row">
+
+                        <strong>Membership Start:</strong>
+
+                        <span>
+
+                            {% if member.membership_start %}
+
+                                {{ member.membership_start|date:"d M Y" }}
+
+                            {% else %}
+
+                                Not provided
+
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <strong>Membership End:</strong>
+
+                        <span>
+
+                            {% if member.membership_end %}
+
+                                {{ member.membership_end|date:"d M Y" }}
+
+                            {% else %}
+
+                                Not provided
+
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- MEMBERSHIP STATUS -->
+
+                    <div class="info-row">
+
+                        <strong>Status:</strong>
+
+                        <span>
+
+                            {% if member.membership_end %}
+
+                                {% if member.membership_end >= today %}
+
+                                    <span class="badge bg-success">
+                                        Active
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-danger">
+                                        Expired
+                                    </span>
+
+                                {% endif %}
+
+                            {% else %}
+
+                                <span class="badge bg-secondary">
+                                    Not Set
+                                </span>
+
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================================
+             TRAINER
+        ======================================================== -->
+
+        <div class="col-md-6 mb-4">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-header bg-success text-white">
+
+                    <h5 class="mb-0">
+                        👨‍🏫 Assigned Trainer
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    {% if member.trainer %}
+
+                        <h4 class="fw-bold">
+                            {{ member.trainer.name }}
+                        </h4>
+
+                        <p class="mb-2">
+
+                            <strong>
+                                Specialization:
+                            </strong>
+
+                            {{ member.trainer.specialization }}
+
+                        </p>
+
+                        <p class="mb-2">
+
+                            <strong>
+                                Mobile:
+                            </strong>
+
+                            {{ member.trainer.mobile }}
+
+                        </p>
+
+                        <p class="mb-0">
+
+                            <strong>
+                                Shift:
+                            </strong>
+
+                            {{ member.trainer.shift_timing }}
+
+                        </p>
+
+                    {% else %}
+
+                        <div class="text-muted">
+
+                            <h5>
+                                No Trainer Assigned
+                            </h5>
+
+                            <p class="mb-0">
+                                You can assign a trainer by editing this member.
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================================
+             ACCOUNT
+        ======================================================== -->
+
+        <div class="col-md-6 mb-4">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-header bg-info text-white">
+
+                    <h5 class="mb-0">
+                        🔐 Account Information
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <div class="info-row">
+
+                        <strong>Username:</strong>
+
+                        <span>
+                            {{ member.user.username }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <strong>Role:</strong>
+
+                        <span>
+                            {{ member.user.get_role_display }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <strong>Account Created:</strong>
+
+                        <span>
+                            {{ member.user.date_joined|date:"d M Y" }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-row">
+
+                        <strong>Last Login:</strong>
+
+                        <span>
+
+                            {% if member.user.last_login %}
+
+                                {{ member.user.last_login|date:"d M Y, h:i A" }}
+
+                            {% else %}
+
+                                Never
+
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         ACTIONS
+    ============================================================ -->
+
+    <div class="card shadow-sm border-0 mt-2">
+
+        <div class="card-body">
+
+            <h5 class="mb-3">
+                ⚙️ Member Actions
+            </h5>
+
+            <div class="d-flex gap-2 flex-wrap">
+
+                <a
+                    href="{% url 'edit_member' member.id %}"
+                    class="btn btn-warning"
+                >
+                    ✏️ Edit Member
+                </a>
+
+
+                <a
+                    href="{% url 'delete_member' member.id %}"
+                    class="btn btn-outline-danger"
+                >
+                    🗑️ Delete Member
+                </a>
+
+
+                <a
+                    href="{% url 'members_list' %}"
+                    class="btn btn-outline-secondary"
+                >
+                    ← Members List
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================================================================
+     STYLE
+================================================================ -->
+
+<style>
+
+    .card {
+        border-radius: 15px;
+    }
+
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 12px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .info-row:last-child {
+        border-bottom: none;
+    }
+
+    .info-row strong {
+        color: #333;
+    }
+
+    .info-row span {
+        text-align: right;
+        color: #555;
+    }
+
+    .btn {
+        border-radius: 8px;
+    }
+
+</style>
+
+{% endblock %}
