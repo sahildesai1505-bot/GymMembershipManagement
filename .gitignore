@@ -14,3 +14,5 @@ media/
 GymProject/settings.local-backup.py
 
 GymProject/settings.local-backup.py
+
+deployenv/
